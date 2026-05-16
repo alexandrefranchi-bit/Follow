@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Plan Dashboard</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+      background: #f8f8f8; 
+      color: #1a1a1a;
+    }
+    
+    .app { 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      padding: 2rem 1rem;
+    }
+    
+    .header { 
+      margin-bottom: 2rem; 
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .header h1 { 
+      font-size: 28px; 
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .header p { 
+      font-size: 14px; 
+      color: #666;
+    }
+    
+    .tabs { 
+      display: flex; 
+      gap: 24px; 
+      border-bottom: 1px solid #ddd; 
+      margin-bottom: 2rem; 
+      padding-bottom: 0;
+      flex-wrap: wrap;
+    }
+    
+    .tab { 
+      padding: 12px 0; 
+      border: none; 
+      background: none; 
+      cursor: pointer; 
+      font-size: 14px; 
+      color: #999;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      font-weight: 400;
+    }
+    
+    .tab:hover { color: #666; }
+    
+    .tab.active { 
+      color: #000; 
+      border-bottom-color: #000;
+      font-weight: 500;
+    }
+    
+    .section { 
+      background: white; 
+      border: 1px solid #ddd; 
+      border-radius: 8px; 
+      padding: 1.5rem; 
+      margin-bottom: 1rem;
+    }
+    
+    .section h3 { 
+      font-size: 16px; 
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .form-group { 
+      margin-bottom: 1rem; 
+    }
+    
+    .form-label { 
+      display: block; 
+      font-size: 13px; 
+      color: #666; 
+      margin-bottom: 6px; 
+      font-weight: 500;
+    }
+    
+    input, textarea { 
+      width: 100%; 
+      padding: 8px 12px; 
+      border: 1px solid #ddd; 
+      border-radius: 6px; 
+      font-size: 14px; 
+      font-family: inherit;
+      background: white;
+    }
+    
+    input:focus, textarea:focus { 
+      outline: none; 
+      border-color: #000;
+      background: #fafafa;
+    }
+    
+    textarea { 
+      min-height: 80px; 
+      resize: vertical;
+    }
+    
+    .metrics { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      gap: 12px; 
+      margin-bottom: 2rem;
+    }
+    
+    .metric { 
+      background: #f9f9f9; 
+      border: 1px solid #eee;
+      border-radius: 6px; 
+      padding: 1rem; 
+      text-align: center;
+    }
+    
+    .metric-label { 
+      font-size: 12px; 
+      color: #999; 
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .metric-value { 
+      font-size: 32px; 
+      font-weight: 700;
+    }
+    
+    .progress-bar {
+      background: #e0e0e0;
+      height: 4px;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      background: #000;
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .btn { 
+      background: #000; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 6px; 
+      font-size: 14px; 
+      font-weight: 500; 
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover:not(:disabled) { 
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .btn:disabled { 
+      opacity: 0.5; 
+      cursor: not-allowed;
+    }
+    
+    .status { 
+      background: #f0f0f0; 
+      border-radius: 6px; 
+      padding: 12px;
+      font-size: 13px; 
+      margin-bottom: 1.5rem;
+      border-left: 3px solid #000;
+    }
+    
+    .kpi-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      align-items: center;
+    }
+    
+    .kpi-row:last-child { border-bottom: none; }
+    
+    .kpi-row input { margin: 0; }
+    
+    .header-label {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      background: #f9f9f9;
+      border-radius: 6px 6px 0 0;
+    }
+    
+    .status-item {
+      padding: 12px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    
+    .status-item strong { display: block; margin-bottom: 4px; }
+    
+    .status-item .desc { color: #999; font-size: 12px; }
+    
+    @media (max-width: 600px) {
+      .header h1 { font-size: 22px; }
+      .metrics { grid-template-columns: 1fr; }
+      .tabs { gap: 12px; }
+      .tab { font-size: 12px; padding: 8px 0; }
+      .kpi-row { grid-template-columns: 1fr; }
+      .header-label { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    function Dashboard() {
+      const [tab, setTab] = React.useState('overview');
+      const [loading, setLoading] = React.useState(true);
+      
+      const [plan, setPlan] = React.useState({
+        summary: { name: '', purpose: '', positioning: '', differentiators: '' },
+        market: { audience: '', size: '', behavior: '', competition: '' },
+        product: { description: '', model: '', drops: '4' },
+        timeline: { phase1: '', phase2: '', phase3: '' },
+        kpis: [
+          { metric: 'Pre-Order Conversion', target: '8-12%', actual: '', frequency: 'Weekly' },
+          { metric: 'Customer Satisfaction', target: '4.7+/5.0', actual: '', frequency: 'Monthly' },
+          { metric: 'Social Engagement', target: '3-5%', actual: '', frequency: 'Weekly' }
+        ],
+        lastUpdated: new Date().toISOString()
+      });
+
+      React.useEffect(() => {
+        loadFromLocalStorage();
+      }, []);
+
+      React.useEffect(() => {
+        if (!loading) {
+          saveToLocalStorage();
+        }
+      }, [plan]);
+
+      const loadFromLocalStorage = () => {
+        try {
+          const saved = localStorage.getItem('businessPlan');
+          if (saved) {
+            setPlan(JSON.parse(saved));
+          }
+        } catch (e) {
+          console.log('Primeiro uso');
+        }
+        setLoading(false);
+      };
+
+      const saveToLocalStorage = () => {
+        try {
+          localStorage.setItem('businessPlan', JSON.stringify({
+            ...plan,
+            lastUpdated: new Date().toISOString()
+          }));
+        } catch (e) {
+          console.log('Erro ao salvar');
+        }
+      };
+
+      const updateField = (section, field, value) => {
+        setPlan(prev => ({
+          ...prev,
+          [section]: { ...prev[section], [field]: value }
+        }));
+      };
+
+      const updateKPI = (index, field, value) => {
+        const newKPIs = [...plan.kpis];
+        newKPIs[index][field] = value;
+        setPlan(prev => ({ ...prev, kpis: newKPIs }));
+      };
+
+      const exportJSON = () => {
+        const data = JSON.stringify(plan, null, 2);
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
+        element.setAttribute('download', `business-plan-${Date.now()}.json`);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      };
+
+      const getProgress = () => {
+        let filled = 0;
+        if (plan.summary.name) filled++;
+        if (plan.market.audience) filled++;
+        if (plan.product.description) filled++;
+        if (plan.timeline.phase1) filled++;
+        return Math.round((filled / 4) * 100);
+      };
+
+      const getKPIProgress = () => {
+        const withActual = plan.kpis.filter(k => k.actual).length;
+        return Math.round((withActual / plan.kpis.length) * 100);
+      };
+
+      if (loading) {
+        return <div style={{ padding: '2rem', textAlign: 'center' }}>⏳ Carregando...</div>;
+      }
+
+      const lastUpdate = new Date(plan.lastUpdated).toLocaleString('pt-BR');
+
+      return (
+        <div className="app">
+          <div className="header">
+            <h1>{plan.summary.name || '📋 Business Plan'}</h1>
+            <p>Dashboard de acompanhamento • Atualizado em {lastUpdate}</p>
+          </div>
+
+          <div className="tabs">
+            <button className={`tab ${tab === 'overview' ? 'active' : ''}`} onClick={() => setTab('overview')}>
+              📊 Overview
+            </button>
+            <button className={`tab ${tab === 'plan' ? 'active' : ''}`} onClick={() => setTab('plan')}>
+              📝 Plano
+            </button>
+            <button className={`tab ${tab === 'timeline' ? 'active' : ''}`} onClick={() => setTab('timeline')}>
+              📅 Timeline
+            </button>
+            <button className={`tab ${tab === 'kpis' ? 'active' : ''}`} onClick={() => setTab('kpis')}>
+              📈 KPIs
+            </button>
+          </div>
+
+          {tab === 'overview' && (
+            <>
+              <div className="status">
+                💾 Auto-save ativado | Os dados são salvos automaticamente no seu navegador
+              </div>
+
+              <div className="metrics">
+                <div className="metric">
+                  <div className="metric-label">Preenchimento</div>
+                  <div className="metric-value">{getProgress()}%</div>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{ width: `${getProgress()}%` }}></div>
+                  </div>
+                </div>
+                <div className="metric">
+                  <div className="metric-label">KPIs</div>
+                  <div className="metric-value">{plan.kpis.length}</div>
+                </div>
+                <div className="metric">
+                  <div className="metric-label">KPIs com Metas</div>
+                  <div className="metric-value">{getKPIProgress()}%</div>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{ width: `${getKPIProgress()}%` }}></div>
+                  </div>
+                </div>
+              </div>
+
+              <button className="btn" onClick={exportJSON} style={{ marginBottom: '2rem' }}>
+                📥 Exportar como JSON
+              </button>
+
+              <div className="section">
+                <h3>Status das Seções</h3>
+                <div className="status-item">
+                  <strong>{plan.summary.name ? '✅' : '⏳'} Resumo Executivo</strong>
+                  {plan.summary.name && <div className="desc">{plan.summary.name}</div>}
+                </div>
+                <div className="status-item">
+                  <strong>{plan.market.audience ? '✅' : '⏳'} Mercado</strong>
+                  {plan.market.audience && <div className="desc">Público-alvo definido</div>}
+                </div>
+                <div className="status-item">
+                  <strong>{plan.product.description ? '✅' : '⏳'} Produto</strong>
+                  {plan.product.description && <div className="desc">Descrição preenchida</div>}
+                </div>
+                <div className="status-item">
+                  <strong>{plan.timeline.phase1 ? '✅' : '⏳'} Timeline</strong>
+                  {plan.timeline.phase1 && <div className="desc">Fases planejadas</div>}
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab === 'plan' && (
+            <>
+              <div className="section">
+                <h3>Resumo Executivo</h3>
+                <div className="form-group">
+                  <label className="form-label">Nome da Empresa/Ideia</label>
+                  <input 
+                    type="text"
+                    placeholder="Ex: FOLLOW Streetwear"
+                    value={plan.summary.name}
+                    onChange={(e) => updateField('summary', 'name', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Purpose (Por quê?)</label>
+                  <textarea 
+                    placeholder="Por que existe? Qual é a razão de ser?"
+                    value={plan.summary.purpose}
+                    onChange={(e) => updateField('summary', 'purpose', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Posicionamento (Para quem? O quê?)</label>
+                  <textarea 
+                    placeholder="Quem é o cliente? O que você oferece?"
+                    value={plan.summary.positioning}
+                    onChange={(e) => updateField('summary', 'positioning', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Diferenciadores Competitivos</label>
+                  <textarea 
+                    placeholder="O que torna você único/incopiável?"
+                    value={plan.summary.differentiators}
+                    onChange={(e) => updateField('summary', 'differentiators', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="section">
+                <h3>Análise de Mercado</h3>
+                <div className="form-group">
+                  <label className="form-label">Quem é seu público-alvo?</label>
+                  <textarea 
+                    placeholder="Persona, idade, renda, comportamento, localização..."
+                    value={plan.market.audience}
+                    onChange={(e) => updateField('market', 'audience', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Tamanho de mercado estimado</label>
+                  <textarea 
+                    placeholder="Quantas pessoas? Crescimento por ano?"
+                    value={plan.market.size}
+                    onChange={(e) => updateField('market', 'size', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Comportamento de compra</label>
+                  <textarea 
+                    placeholder="Como compram? Que gatilhos disparam decisão?"
+                    value={plan.market.behavior}
+                    onChange={(e) => updateField('market', 'behavior', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Concorrência & Gap</label>
+                  <textarea 
+                    placeholder="Competitors? Qual o gap que você ocupa?"
+                    value={plan.market.competition}
+                    onChange={(e) => updateField('market', 'competition', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="section">
+                <h3>Estratégia de Produto</h3>
+                <div className="form-group">
+                  <label className="form-label">Descrição do Produto</label>
+                  <textarea 
+                    placeholder="O que é? Specs? Materiais? Diferenciais?"
+                    value={plan.product.description}
+                    onChange={(e) => updateField('product', 'description', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Modelo de Negócio</label>
+                  <textarea 
+                    placeholder="Como vende? Pre-order? Direct? Subscriptions?"
+                    value={plan.product.model}
+                    onChange={(e) => updateField('product', 'model', e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Quantas coleções/drops por ano?</label>
+                  <input 
+                    type="number"
+                    value={plan.product.drops}
+                    onChange={(e) => updateField('product', 'drops', e.target.value)}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab === 'timeline' && (
+            <div className="section">
+              <h3>Roadmap 90 Dias</h3>
+              <div className="form-group">
+                <label className="form-label">Fase 1 (Dias 1-30) — Solidificação</label>
+                <textarea 
+                  placeholder="Que tarefas críticas precisa completar? Specs, testes, setup..."
+                  value={plan.timeline.phase1}
+                  onChange={(e) => updateField('timeline', 'phase1', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Fase 2 (Dias 31-60) — Preparação</label>
+                <textarea 
+                  placeholder="Produção, content, marketing setup..."
+                  value={plan.timeline.phase2}
+                  onChange={(e) => updateField('timeline', 'phase2', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Fase 3 (Dias 61-90) — Lançamento & Validação</label>
+                <textarea 
+                  placeholder="Go-live, campaigns, monitoramento, coleta de feedback..."
+                  value={plan.timeline.phase3}
+                  onChange={(e) => updateField('timeline', 'phase3', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          {tab === 'kpis' && (
+            <div className="section">
+              <h3>KPIs & Métricas de Sucesso</h3>
+              <div style={{ marginTop: '1rem' }}>
+                <div className="header-label">
+                  <div>Métrica</div>
+                  <div>Target</div>
+                  <div>Atual</div>
+                </div>
+                {plan.kpis.map((kpi, i) => (
+                  <div key={i} className="kpi-row">
+                    <input 
+                      type="text"
+                      placeholder="Nome da métrica"
+                      value={kpi.metric}
+                      onChange={(e) => updateKPI(i, 'metric', e.target.value)}
+                    />
+                    <input 
+                      type="text"
+                      placeholder="Ex: 8-12%"
+                      value={kpi.target}
+                      onChange={(e) => updateKPI(i, 'target', e.target.value)}
+                    />
+                    <input 
+                      type="text"
+                      placeholder="Valor atual"
+                      value={kpi.actual}
+                      onChange={(e) => updateKPI(i, 'actual', e.target.value)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<Dashboard />, document.getElementById('root'));
+  </script>
+</body>
+</html>
