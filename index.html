@@ -3,140 +3,355 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FOLLOW - Resumo Estratégico</title>
+  <title>FOLLOW - Strategic Dashboard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f8f8; color: #1a1a1a; }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: #f5f5f5; 
+      color: #1a1a1a;
+    }
+    
     .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
-    .hero { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: white; padding: 3rem 2rem; border-radius: 12px; margin-bottom: 2rem; }
-    .hero h1 { font-size: 36px; margin-bottom: 8px; font-weight: 700; }
+    
+    /* HERO SECTION */
+    .hero { 
+      background: #000; 
+      color: white; 
+      padding: 3rem 2rem; 
+      border-radius: 0; 
+      margin-bottom: 2rem;
+      border-top: 4px solid #DC143C;
+    }
+    .hero h1 { font-size: 42px; margin-bottom: 8px; font-weight: 700; letter-spacing: 2px; }
     .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 16px; }
     .hero-meta { display: flex; gap: 24px; flex-wrap: wrap; font-size: 14px; }
-    .meta-item { display: flex; flex-direction: column; }
-    .meta-label { opacity: 0.7; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .meta-value { font-size: 18px; font-weight: 600; }
+    .meta-item { display: flex; flex-direction: column; padding-right: 24px; border-right: 1px solid #DC143C; }
+    .meta-item:last-child { border-right: none; }
+    .meta-label { opacity: 0.6; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .meta-value { font-size: 18px; font-weight: 700; color: #DC143C; }
     
-    .section { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; }
-    .section h2 { font-size: 22px; margin-bottom: 1.5rem; padding-bottom: 12px; border-bottom: 2px solid #000; }
+    /* SECTIONS */
+    .section { 
+      background: white; 
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid #DC143C;
+      border-radius: 0; 
+      padding: 2rem; 
+      margin-bottom: 1.5rem; 
+    }
+    .section h2 { 
+      font-size: 24px; 
+      margin-bottom: 1.5rem; 
+      padding-bottom: 12px; 
+      border-bottom: 2px solid #000; 
+      font-weight: 700;
+    }
     
+    /* GRID LAYOUTS */
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
     
-    .card { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1.5rem; }
-    .card h3 { font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-    .card-content { font-size: 16px; line-height: 1.6; color: #333; }
-    .card-value { font-size: 24px; font-weight: 700; color: #000; margin-bottom: 8px; }
+    /* CARDS */
+    .card { 
+      background: #f9f9f9; 
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #DC143C;
+      border-radius: 0; 
+      padding: 1.5rem; 
+    }
+    .card h3 { font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .card-content { font-size: 14px; line-height: 1.7; color: #333; }
+    .card-value { font-size: 28px; font-weight: 700; color: #000; margin-bottom: 8px; }
     
-    .pillar { background: white; border-left: 4px solid #000; padding: 1.5rem; margin-bottom: 1rem; border-radius: 4px; }
-    .pillar-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-    .pillar-desc { font-size: 14px; color: #666; }
-    .pillar-metric { font-size: 12px; color: #999; margin-top: 8px; }
+    /* SKU CARDS */
+    .sku-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+    .sku-card { 
+      background: white; 
+      border: 2px solid #000; 
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .sku-number { 
+      font-size: 12px; 
+      font-weight: 700; 
+      color: #DC143C; 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .sku-name { 
+      font-size: 18px; 
+      font-weight: 700; 
+      margin-bottom: 8px;
+    }
+    .sku-type { 
+      font-size: 12px; 
+      color: #999; 
+      margin-bottom: 12px;
+    }
+    .sku-colors { 
+      display: flex; 
+      gap: 8px; 
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .color-dot { 
+      width: 24px; 
+      height: 24px; 
+      border-radius: 50%; 
+      border: 1px solid #ddd;
+    }
     
-    .timeline { position: relative; padding: 2rem 0; }
-    .phase { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
-    .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-    .phase-number { width: 40px; height: 40px; background: #000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-    .phase-title { font-size: 18px; font-weight: 600; }
-    .phase-content { font-size: 14px; color: #666; line-height: 1.6; }
-    .task { background: #f9f9f9; padding: 10px 12px; border-radius: 4px; margin: 8px 0 8px 0; font-size: 13px; border-left: 2px solid #000; }
+    /* CHECKLIST */
+    .checklist { list-style: none; margin: 1.5rem 0; }
+    .checklist li { 
+      padding: 12px; 
+      margin-bottom: 8px; 
+      background: #f9f9f9; 
+      border-left: 3px solid #DC143C;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .checklist li:hover { background: #f0f0f0; }
+    .checklist li.checked { 
+      background: #e8f5e9; 
+      border-left-color: #2e7d32;
+    }
+    .checklist li.checked .checkbox::after { 
+      content: '✓'; 
+      position: absolute;
+      color: #2e7d32;
+      font-weight: 700;
+    }
+    .checkbox { 
+      width: 20px; 
+      height: 20px; 
+      border: 2px solid #DC143C; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .checklist li.checked .checkbox { 
+      background: #2e7d32; 
+      border-color: #2e7d32;
+    }
+    .checkbox-text { flex: 1; text-align: left; font-size: 14px; }
     
-    .kpi-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    .kpi-table th { background: #f0f0f0; padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd; }
-    .kpi-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-    .kpi-table tr:hover { background: #f9f9f9; }
+    /* EXPLICAÇÕES */
+    .explanation { 
+      background: #fff3e0; 
+      border-left: 3px solid #f57c00;
+      padding: 1rem; 
+      margin: 1rem 0; 
+      border-radius: 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #333;
+    }
+    .explanation strong { color: #e65100; }
     
-    .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .status-active { background: #e8f5e9; color: #2e7d32; }
-    .status-planning { background: #fff3e0; color: #e65100; }
-    .status-pending { background: #f3e5f5; color: #6a1b9a; }
+    /* METRICS EXPLANATION */
+    .metric-row { 
+      background: white; 
+      border: 1px solid #e0e0e0; 
+      padding: 1.5rem; 
+      margin-bottom: 1rem;
+      border-left: 3px solid #DC143C;
+    }
+    .metric-row h4 { 
+      font-size: 14px; 
+      font-weight: 700; 
+      color: #000;
+      margin-bottom: 8px;
+    }
+    .metric-row .target { 
+      font-size: 24px; 
+      font-weight: 700; 
+      color: #DC143C; 
+      margin-bottom: 8px;
+    }
+    .metric-row .description { 
+      font-size: 13px; 
+      line-height: 1.6; 
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .metric-row .example { 
+      font-size: 12px; 
+      color: #999; 
+      font-style: italic;
+      padding: 8px;
+      background: #f9f9f9;
+    }
     
-    .strengths { background: #e8f5e9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
-    .strengths h4 { color: #2e7d32; margin-bottom: 8px; font-size: 14px; }
-    .strengths ul { padding-left: 20px; }
-    .strengths li { margin: 6px 0; font-size: 14px; color: #333; }
+    /* SWOT BOXES */
+    .swot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
+    .swot-box { 
+      border-left: 4px solid #000; 
+      padding: 1.5rem; 
+      background: white;
+    }
+    .swot-box h4 { 
+      font-size: 16px; 
+      font-weight: 700; 
+      margin-bottom: 12px;
+    }
+    .swot-box ul { 
+      padding-left: 20px; 
+      list-style: none;
+    }
+    .swot-box li { 
+      margin: 8px 0; 
+      font-size: 13px; 
+      line-height: 1.5;
+      padding-left: 16px;
+      position: relative;
+    }
+    .swot-box li::before { 
+      content: '→'; 
+      position: absolute; 
+      left: 0; 
+      color: #DC143C; 
+      font-weight: 700;
+    }
     
-    .next-steps { background: #fff3e0; padding: 1.5rem; border-radius: 8px; }
-    .next-steps h4 { color: #e65100; margin-bottom: 8px; font-size: 14px; }
-    .next-steps ol { padding-left: 20px; }
-    .next-steps li { margin: 8px 0; font-size: 14px; color: #333; }
+    .swot-strengths { border-left-color: #2e7d32; }
+    .swot-strengths h4 { color: #2e7d32; }
     
-    .metric-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .metric-item { background: #f0f0f0; padding: 1rem; border-radius: 6px; text-align: center; }
-    .metric-item .value { font-size: 28px; font-weight: 700; color: #000; }
-    .metric-item .label { font-size: 12px; color: #999; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .swot-weaknesses { border-left-color: #d32f2f; }
+    .swot-weaknesses h4 { color: #d32f2f; }
+    
+    .swot-opportunities { border-left-color: #f57c00; }
+    .swot-opportunities h4 { color: #f57c00; }
+    
+    .swot-threats { border-left-color: #7b1fa2; }
+    .swot-threats h4 { color: #7b1fa2; }
+    
+    /* PROGRESS BARS */
+    .progress-section { margin: 1.5rem 0; }
+    .progress-item { margin-bottom: 1.5rem; }
+    .progress-label { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .progress-bar { 
+      width: 100%; 
+      height: 24px; 
+      background: #e0e0e0; 
+      border: 1px solid #ccc;
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, #000 0%, #DC143C 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    /* NEXT ACTIONS */
+    .action-item { 
+      background: white; 
+      border-left: 3px solid #DC143C; 
+      padding: 1.5rem; 
+      margin-bottom: 1rem;
+      border-radius: 0;
+    }
+    .action-priority { 
+      display: inline-block;
+      padding: 4px 8px;
+      background: #DC143C;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .action-title { 
+      font-size: 16px; 
+      font-weight: 700; 
+      margin-bottom: 8px;
+    }
+    .action-description { 
+      font-size: 13px; 
+      color: #666; 
+      line-height: 1.6;
+    }
+    
+    /* TERM EXPLANATION */
+    .term { 
+      color: #DC143C; 
+      font-weight: 600;
+    }
+    .term-explanation { 
+      font-size: 12px; 
+      color: #999; 
+      font-style: italic;
+    }
     
     @media (max-width: 768px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .hero { padding: 2rem 1.5rem; }
+      .grid-2, .grid-3, .sku-grid, .swot-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 28px; }
-      .hero-meta { flex-direction: column; gap: 12px; }
+      .hero-meta { flex-direction: column; }
+      .meta-item { border-right: none; border-bottom: 1px solid #DC143C; padding-bottom: 12px; }
+      .hero-meta .meta-item:last-child { border-bottom: none; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <div class="hero">
-      <h1>🎯 FOLLOW</h1>
-      <p>Marca brasileira de lifestyle streetwear e running apparel para runners urbanos</p>
+      <h1>FOLLOW</h1>
+      <p>Lifestyle Streetwear & Running Apparel — Marca Autêntica Brasileira</p>
       <div class="hero-meta">
         <div class="meta-item">
           <span class="meta-label">Status</span>
           <span class="meta-value">Em Desenvolvimento</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Lançamento</span>
-          <span class="meta-value">Q2 2026</span>
+          <span class="meta-label">Modelo</span>
+          <span class="meta-value">Pre-order</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">Drops/Ano</span>
           <span class="meta-value">4 Coleções</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Modelo</span>
-          <span class="meta-value">Pre-order / Sell-first</span>
+          <span class="meta-label">Drop 1</span>
+          <span class="meta-value">6 SKUs Iniciais</span>
         </div>
       </div>
     </div>
 
-    <!-- EXECUTIVE SUMMARY -->
+    <!-- RESUMO EXECUTIVO -->
     <div class="section">
       <h2>📋 Resumo Executivo</h2>
       <div class="grid-2">
         <div>
-          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Purpose (Por Quê?)</h3>
-          <p style="font-size: 15px; line-height: 1.7; color: #333;">Celebrar e amplificar a cultura de corrida urbana brasileira através de design contemporâneo, qualidade premium e autenticidade genuína.</p>
+          <h3 style="font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">Purpose (Por Quê?)</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">Celebrar e amplificar a cultura de corrida urbana brasileira através de design contemporâneo, qualidade premium e autenticidade genuína. FOLLOW é pra quem entende que corrida é mais que exercício — é lifestyle.</p>
         </div>
         <div>
-          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Posicionamento</h3>
-          <p style="font-size: 15px; line-height: 1.7; color: #333;">Para lifestyle runners 18-35 anos que buscam qualidade premium + design inconfundível + identidade cultural autêntica.</p>
+          <h3 style="font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">Posicionamento</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">Para <span class="term">lifestyle runners</span> <span class="term-explanation">(pessoas que correm e usam isso como estilo de vida)</span> 18-35 anos que buscam qualidade premium + design inconfundível + uma marca que realmente representa a cultura urbana brasileira.</p>
         </div>
-      </div>
-    </div>
-
-    <!-- PILARES ESTRATÉGICOS -->
-    <div class="section">
-      <h2>🏛️ Pilares Estratégicos</h2>
-      <div class="pillar">
-        <div class="pillar-title">🎨 Design</div>
-        <div class="pillar-desc">Identidade visual distintiva, minimalista, inconfundível</div>
-        <div class="pillar-metric">Métrica de Sucesso: Logo 9.1/10 | Packaging 10/10</div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-title">✨ Qualidade</div>
-        <div class="pillar-desc">Materiais premium, execução impecável em cada detalhe</div>
-        <div class="pillar-metric">Métrica de Sucesso: Score qualidade de produto 9.0+</div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-title">📦 Estratégia</div>
-        <div class="pillar-desc">Pre-order/sell-first, lançamentos controlados, hype responsável</div>
-        <div class="pillar-metric">Métrica de Sucesso: COGS controlado, sell-through 85%+</div>
-      </div>
-      <div class="pillar">
-        <div class="pillar-title">👥 Comunidade</div>
-        <div class="pillar-desc">Conexão autêntica com runners urbanos, brand advocates</div>
-        <div class="pillar-metric">Métrica de Sucesso: Engagement rate 5%+ em social</div>
       </div>
     </div>
 
@@ -152,360 +367,442 @@
             • Vivem em grandes centros urbanos<br>
             • Renda média-alta<br>
             • Digitalmente nativos<br>
-            • Usam moda como expressão de identidade
+            • Usam moda como expressão de identidade<br>
+            • Buscam comunidade e conexão
           </div>
         </div>
         <div class="card">
           <h3>Tamanho de Mercado</h3>
-          <div class="card-value">2-3M</div>
+          <div class="card-value">2-3 Milhões</div>
           <div class="card-content">
             Lifestyle runners estimados no Brasil<br><br>
             <strong>Crescimento:</strong> 15-20% ao ano<br>
-            <strong>Trend:</strong> Pós-pandemia, alta demanda por wellness
+            <strong>Trend:</strong> Pós-pandemia, alta demanda por wellness e autocuidado
           </div>
-        </div>
-      </div>
-      <div class="card" style="margin-top: 1rem;">
-        <h3>Comportamento de Compra</h3>
-        <div class="card-content">
-          ✓ Dispostos a pagar premium por qualidade + design<br>
-          ✓ Buscam diferenciação, não commodities<br>
-          ✓ High engagement em social media<br>
-          ✓ Gatilhos: Design, sustentabilidade, comunidade, exclusividade
-        </div>
-      </div>
-    </div>
-
-    <!-- DIFERENCIADORES -->
-    <div class="section">
-      <h2>🔑 Diferenciadores Competitivos</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3>Autenticidade Brasileira</h3>
-          <div class="card-content">Origem, design, narrativa — tudo genuinamente brasileiro, sem pretensão de ser europeu/americano.</div>
-        </div>
-        <div class="card">
-          <h3>Design System Proprietário</h3>
-          <div class="card-content">Logo, tipografia e identidade visual que não pode ser copiada. Inconfundível em ponto de venda.</div>
-        </div>
-        <div class="card">
-          <h3>Modelo Pre-Order</h3>
-          <div class="card-content">Reduz risco, permite customização, gera hype. Diferencia de fast-fashion e grandes corporações.</div>
-        </div>
-        <div class="card">
-          <h3>Comunidade First</h3>
-          <div class="card-content">Strategy focada em qualidade vs volume. Early adopters tornam-se brand advocates naturais.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRODUTO & ESTRATÉGIA -->
-    <div class="section">
-      <h2>🛍️ Estratégia de Produto</h2>
-      <div class="grid-2">
-        <div>
-          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Modelo de Negócio</h3>
-          <p style="font-size: 15px; line-height: 1.7; color: #333;">
-            <strong>Pre-order / Sell-first</strong><br><br>
-            Ao invés de manufaturar antes de validar demanda, FOLLOW capta pedidos primeiro, depois produz. Isso reduz risco de estoque morto e cria exclusividade.
-          </p>
-        </div>
-        <div>
-          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Estrutura de Drops</h3>
-          <p style="font-size: 15px; line-height: 1.7; color: #333;">
-            <strong>4 Coleções Anuais</strong><br><br>
-            Cada drop com tema visual, narrativa e seleção de SKUs próprias. Permite estender ciclo de vida, testar variações e construir antecipação.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- IDENTIDADE VISUAL -->
-    <div class="section">
-      <h2>🎨 Identidade Visual</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3>Logo</h3>
-          <div class="card-value">9.1/10</div>
-          <div class="card-content">
-            ✓ Geometria & proporção impecável<br>
-            ✓ Impossível confundir<br>
-            ✓ Versátil em qualquer escala<br>
-            ✓ Forte recall visual<br>
-            ✓ Pronto para produção
-          </div>
-        </div>
-        <div class="card">
-          <h3>Packaging</h3>
-          <div class="card-value">10/10</div>
-          <div class="card-content">
-            ✓ Atenção ao detalhe impecável<br>
-            ✓ Coerência visual total<br>
-            ✓ Qualidade tátil premium<br>
-            ✓ Experiência desempacotamento memorável<br>
-            ✓ Funcionalidade + estética perfeita
-          </div>
-        </div>
-      </div>
-      <div class="card" style="margin-top: 1rem;">
-        <h3>Paleta de Cores</h3>
-        <div style="display: flex; gap: 16px; margin-top: 1rem; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
-            <div style="width: 40px; height: 40px; background: #000; border-radius: 4px;"></div>
-            <div><strong>Preto</strong><br>#000000<br>Base, premium</div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
-            <div style="width: 40px; height: 40px; background: #fff; border: 1px solid #ddd; border-radius: 4px;"></div>
-            <div><strong>Branco</strong><br>#FFFFFF<br>Clean, luxury</div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
-            <div style="width: 40px; height: 40px; background: #DC143C; border-radius: 4px;"></div>
-            <div><strong>Vermelho</strong><br>#DC143C<br>CTA, urgência</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DROP 1 - PLANEJAMENTO -->
-    <div class="section">
-      <h2>🚀 Drop 1 - Planejamento Inaugural</h2>
-      <p style="margin-bottom: 1.5rem; font-size: 14px; color: #666;">
-        Drop 1 é o lançamento inaugural de FOLLOW. Com 6 SKUs selecionados, objetivo é demonstrar capacidade de design, qualidade e execução.
-      </p>
-      <div class="card" style="margin-bottom: 1rem;">
-        <h3>SKU Roadmap</h3>
-        <div class="card-content">
-          <strong>6 Itens Prioritários:</strong><br>
-          001. [A confirmar]<br>
-          002. [A confirmar]<br>
-          003. [A confirmar]<br>
-          004. [A confirmar]<br>
-          005. [A confirmar]<br>
-          006. [A confirmar]
         </div>
       </div>
       <div class="card">
-        <h3>Métricas de Sucesso</h3>
-        <table class="kpi-table">
-          <tr>
-            <th>Métrica</th>
-            <th>Target</th>
-            <th>Racionalidade</th>
-          </tr>
-          <tr>
-            <td>Taxa de Conversão Pre-Order</td>
-            <td>8-12%</td>
-            <td>Indicador de interesse para brand nova</td>
-          </tr>
-          <tr>
-            <td>Sell-Through Rate</td>
-            <td>85%+</td>
-            <td>% de itens pré-pedidos que convertem em vendas</td>
-          </tr>
-          <tr>
-            <td>Avg Order Value (AOV)</td>
-            <td>$150+</td>
-            <td>Múltiplos SKUs por pedido = maior ticket</td>
-          </tr>
-          <tr>
-            <td>Customer Satisfaction (NPS)</td>
-            <td>4.7+/5.0</td>
-            <td>Qualidade de produto, packaging, entrega</td>
-          </tr>
-          <tr>
-            <td>Social Engagement</td>
-            <td>3-5%</td>
-            <td>Likes, comments, shares em posts</td>
-          </tr>
-          <tr>
-            <td>Repeat Purchase Intent</td>
-            <td>40%+</td>
-            <td>De primeiros compradores → Drop 2</td>
-          </tr>
-        </table>
+        <h3>Gatilhos de Compra</h3>
+        <div class="card-content">
+          ✓ <strong>Design inconfundível</strong> — Querem se destacar<br>
+          ✓ <strong>Qualidade</strong> — Dispostos a pagar premium por durabilidade<br>
+          ✓ <strong>Comunidade</strong> — Buscam conexão com marca e outros runners<br>
+          ✓ <strong>Exclusividade</strong> — Não querem o que todo mundo tem<br>
+          ✓ <strong>Autenticidade</strong> — Marcas falsas/genéricas não atraem
+        </div>
       </div>
     </div>
 
-    <!-- ROADMAP 90 DIAS -->
+    <!-- SKUs DROP 1 -->
     <div class="section">
-      <h2>📅 Roadmap Operacional 90 Dias</h2>
-      <div class="timeline">
-        <div class="phase">
-          <div class="phase-header">
-            <div class="phase-number">1</div>
-            <div class="phase-title">Solidificação (Dias 1-30)</div>
-          </div>
-          <div class="phase-content">
-            <div class="task">✓ Finalizar 3 ajustes de logo (origem brasileira, slash tank top, variante FLLW/)</div>
-            <div class="task">✓ Aprovar specs finais de todos 6 SKUs</div>
-            <div class="task">✓ Closed testing com 20-30 beta testers (qualidade, fit, feedback)</div>
-            <div class="task">✓ Definir preços e modelo de pre-order</div>
-            <div class="task">✓ Criar assets visuais para lançamento (fotos, lifestyle, guias)</div>
+      <h2>👕 Drop 1 - 6 SKUs Iniciais</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 14px; color: #666;">Cada SKU vem em <strong>2 cores diferentes</strong>. Total: 6 produtos × 2 cores = 12 variações no lançamento.</p>
+      
+      <div class="sku-grid">
+        <div class="sku-card">
+          <div class="sku-number">SKU 001</div>
+          <div class="sku-name">Básica Manga Feminina</div>
+          <div class="sku-type">Camiseta de corrida feminina</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #ffffff; border: 2px solid #000;"></div>
           </div>
         </div>
-
-        <div class="phase">
-          <div class="phase-header">
-            <div class="phase-number">2</div>
-            <div class="phase-title">Preparação (Dias 31-60)</div>
-          </div>
-          <div class="phase-content">
-            <div class="task">✓ Setup de plataforma pre-order (Shopify/similar)</div>
-            <div class="task">✓ Produção de primeiros lotes (manufatura confirmada)</div>
-            <div class="task">✓ Criar conteúdo social (posts, stories, teaser videos)</div>
-            <div class="task">✓ Definir influencers/runners para seeding</div>
-            <div class="task">✓ Preparar email sequences para lista waitlist</div>
+        
+        <div class="sku-card">
+          <div class="sku-number">SKU 002</div>
+          <div class="sku-name">Básica Manga Masculina</div>
+          <div class="sku-type">Camiseta de corrida masculina</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #ffffff; border: 2px solid #000;"></div>
           </div>
         </div>
-
-        <div class="phase">
-          <div class="phase-header">
-            <div class="phase-number">3</div>
-            <div class="phase-title">Lançamento & Validação (Dias 61-90)</div>
+        
+        <div class="sku-card">
+          <div class="sku-number">SKU 003</div>
+          <div class="sku-name">Regata Feminina</div>
+          <div class="sku-type">Camiseta sem manga feminina</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #DC143C;"></div>
           </div>
-          <div class="phase-content">
-            <div class="task">✓ Go-live pre-order (Drop 1)</div>
-            <div class="task">✓ Ativar social campaign + influencer seeding</div>
-            <div class="task">✓ Monitorar metrics diariamente</div>
-            <div class="task">✓ Realizar reordenações em tempo real</div>
-            <div class="task">✓ Coletar feedback para Drop 2</div>
+        </div>
+        
+        <div class="sku-card">
+          <div class="sku-number">SKU 004</div>
+          <div class="sku-name">Regata Masculina</div>
+          <div class="sku-type">Camiseta sem manga masculina</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #DC143C;"></div>
+          </div>
+        </div>
+        
+        <div class="sku-card">
+          <div class="sku-number">SKU 005</div>
+          <div class="sku-name">Oversized Unissex</div>
+          <div class="sku-type">Camiseta oversized (tamanho grande/solto)</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #ffffff; border: 2px solid #000;"></div>
+          </div>
+        </div>
+        
+        <div class="sku-card">
+          <div class="sku-number">SKU 006</div>
+          <div class="sku-name">Cropped Unissex</div>
+          <div class="sku-type">Camiseta cropped (comprida curto)</div>
+          <div class="sku-colors">
+            <div class="color-dot" style="background: #000;"></div>
+            <div class="color-dot" style="background: #DC143C;"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- KPIs GERAIS -->
+    <!-- MÉTRICAS DE SUCESSO EXPLICADAS -->
     <div class="section">
-      <h2>📊 KPIs & Métricas Gerais</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>AWARENESS & REACH</h3>
-          <div class="card-content" style="font-size: 13px;">
-            <strong>Social Followers:</strong> 2K em 30 dias<br><br>
-            <strong>Website Visits:</strong> 5K em 30 dias<br><br>
-            <strong>Impressions:</strong> 100K earned media
-          </div>
+      <h2>📊 Métricas de Sucesso - Drop 1 Explicadas</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">Essas são as <strong>métricas que você deve acompanhar</strong> para saber se o Drop 1 foi bem-sucedido ou não. Cada uma mede um aspecto diferente do negócio.</p>
+      
+      <div class="metric-row">
+        <h4>1. Taxa de Conversão Pre-Order</h4>
+        <div class="target">8-12%</div>
+        <div class="description">
+          <strong>O quê significa?</strong> De cada 100 pessoas que veem seu anúncio do Drop 1, você quer que entre 8 e 12 façam um pedido. É a porcentagem de visitantes que viram e realmente compraram.
         </div>
-        <div class="card">
-          <h3>CONVERSION & SALES</h3>
-          <div class="card-content" style="font-size: 13px;">
-            <strong>Pre-Order:</strong> 8-12% conversão<br><br>
-            <strong>AOV:</strong> $150+<br><br>
-            <strong>Revenue:</strong> $30-50K (Drop 1)
-          </div>
+        <div class="example">
+          Exemplo: Se 1.000 pessoas visitam seu site, você quer 80-120 pedidos.
         </div>
-        <div class="card">
-          <h3>PRODUCT QUALITY</h3>
-          <div class="card-content" style="font-size: 13px;">
-            <strong>NPS:</strong> 50+ (excelente)<br><br>
-            <strong>Return Rate:</strong> &lt;5%<br><br>
-            <strong>Repeat Intent:</strong> 40%+
-          </div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>2. Sell-Through Rate</h4>
+        <div class="target">85%+</div>
+        <div class="description">
+          <strong>O quê significa?</strong> De todas as unidades que você produziu e colocou à venda, quantas realmente venderam? 85%+ significa que só vai sobrar 15% ou menos do seu estoque.
+        </div>
+        <div class="example">
+          Exemplo: Se você produziu 1.000 camisetas, quer vender pelo menos 850.
+        </div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>3. Average Order Value (AOV)</h4>
+        <div class="target">$150+</div>
+        <div class="description">
+          <strong>O quê significa?</strong> Quando um cliente compra, quanto ele gasta em média? Se seu AOV é $150, significa que cada cliente que compra, gasta pelo menos $150 (pode ser 1 item caro ou 2-3 itens mais baratos).
+        </div>
+        <div class="example">
+          Exemplo: Cliente 1 compra 1 camiseta por $80 + 1 regata por $70 = $150. Cliente 2 compra só 1 camiseta por $80. Média = $115 (abaixo da meta).
+        </div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>4. Customer Satisfaction (NPS)</h4>
+        <div class="target">4.7+/5.0</div>
+        <div class="description">
+          <strong>O quê significa?</strong> Você pergunta aos clientes: "De 1 a 5, quanto você gostou do produto, do atendimento, do empacotamento?" A nota média deve ser 4.7 ou superior. Isso indica <strong>qualidade</strong>.
+        </div>
+        <div class="example">
+          Exemplo: 10 clientes deixam reviews: 5, 5, 5, 4, 5, 5, 4, 5, 5, 5. Média = 4.8/5.0 ✓
+        </div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>5. Social Engagement Rate</h4>
+        <div class="target">3-5%</div>
+        <div class="description">
+          <strong>O quê significa?</strong> Você posta sobre o Drop 1 no Instagram/TikTok/redes sociais. De cada 100 pessoas que veem o post, quantas fazem algo? (like, comentário, share, salvar). 3-5% é muito bom pra marca nova.
+        </div>
+        <div class="example">
+          Exemplo: Seu post recebe 1.000 visualizações. Você quer 30-50 likes + comentários + saves + shares.
+        </div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>6. Repeat Purchase Intent</h4>
+        <div class="target">40%+</div>
+        <div class="description">
+          <strong>O quê significa?</strong> Depois de comprar no Drop 1, você faz uma pesquisa simples: "Você compraria no Drop 2?" Se 40%+ dizem sim, significa você criou <strong>clientes leais</strong> que voltam.
+        </div>
+        <div class="example">
+          Exemplo: 100 clientes compram no Drop 1. Você pesquisa 50 deles e 22 dizem "sim, volto no Drop 2" = 44% (dentro da meta!).
         </div>
       </div>
     </div>
 
-    <!-- SWOT -->
+    <!-- SOLIDIFICAÇÃO COM CHECKLIST -->
     <div class="section">
-      <h2>🎯 SWOT Analysis</h2>
-      <div class="grid-2">
-        <div class="strengths">
-          <h4>💪 STRENGTHS</h4>
+      <h2>⚡ Fase 1 - Solidificação (Dias 1-30)</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">Essas são as <strong>tarefas críticas que você PRECISA completar</strong> nos primeiros 30 dias. Clique para marcar como feito.</p>
+      
+      <ul class="checklist" id="checklist1">
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Finalizar ajustes de logo</strong> — Determinar origem brasileira, slash em tank top, variante FLLW/</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Aprovar specs finais de 6 SKUs</strong> — Confirmar medidas, materiais, cores com fornecedor</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Fazer closed testing</strong> <span class="term-explanation">(teste privado com grupo pequeno selecionado)</span> — 20-30 beta testers testam qualidade, fit, durabilidade</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Coletar feedback de testes</strong> — Perguntar aos beta testers: "O que achou? Mudaria algo?"</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Ajustar produtos baseado em feedback</strong> — Se muita gente disse que a gola é apertada, aumentar a gola</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Definir preços finais</strong> — Calcular: custo produção + margem de lucro + competidores</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Escolher plataforma pre-order</strong> <span class="term-explanation">(site aonde você vende antes de produzir)</span> — Shopify, CustomInk, ou similar</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Fotografar todos 6 SKUs</strong> — Fotos dos produtos em preto, branco, vermelho, múltiplos ângulos</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Criar lifestyle shots</strong> — Pessoas reais usando FOLLOW (não só o produto pendurado)</div>
+        </li>
+        <li>
+          <div class="checkbox"></div>
+          <div class="checkbox-text"><strong>Preparar descrição de cada SKU</strong> — Por que cada camiseta é legal? Qual material? Quando usar?</div>
+        </li>
+      </ul>
+      
+      <div class="explanation">
+        <strong>💡 Dica importante:</strong> Não passe para Fase 2 até que TODOS essas tarefas estejam marcadas como feito. A qualidade do Drop 1 depende disso.
+      </div>
+    </div>
+
+    <!-- KPIs E MÉTRICAS DETALHADO -->
+    <div class="section">
+      <h2>📈 KPIs & Métricas - Acompanhamento Contínuo</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">Essas métricas você acompanha <strong>durante e depois do Drop 1</strong> para entender se as coisas estão funcionando bem.</p>
+      
+      <h3 style="font-size: 16px; font-weight: 700; margin: 1.5rem 0 1rem 0; border-bottom: 2px solid #DC143C; padding-bottom: 8px;">Awareness & Reach (Conhecimento)</h3>
+      <p style="font-size: 13px; color: #666; margin-bottom: 1rem;">Essas métricas mostram <strong>quantas pessoas estão vendo FOLLOW</strong> (mesmo que não comprem ainda).</p>
+      
+      <div class="metric-row">
+        <h4>Social Followers</h4>
+        <div class="target">2.000 em 30 dias</div>
+        <div class="description">Você quer que 2 mil pessoas sigam você no Instagram/TikTok até o lançamento. São as pessoas que vão ficar sabendo quando você postar.</div>
+      </div>
+      
+      <div class="metric-row">
+        <h4>Website Visits</h4>
+        <div class="target">5.000 em 30 dias</div>
+        <div class="description">Quantas pessoas clicam no seu link e acessam o site de pré-venda? 5 mil visitas é um bom começo.</div>
+      </div>
+      
+      <h3 style="font-size: 16px; font-weight: 700; margin: 1.5rem 0 1rem 0; border-bottom: 2px solid #DC143C; padding-bottom: 8px;">Conversion & Sales (Vendas)</h3>
+      <p style="font-size: 13px; color: #666; margin-bottom: 1rem;">Essas métricas mostram <strong>quanto dinheiro você está ganhando</strong>.</p>
+      
+      <div class="metric-row">
+        <h4>Total Revenue (Receita Total)</h4>
+        <div class="target">$30.000 - $50.000</div>
+        <div class="description">Quanto dinheiro você quer ganhar no Drop 1? Se o preço médio é $80 por camiseta, você quer entre 375 a 625 pedidos.</div>
+      </div>
+      
+      <h3 style="font-size: 16px; font-weight: 700; margin: 1.5rem 0 1rem 0; border-bottom: 2px solid #DC143C; padding-bottom: 8px;">Customer Retention (Manter Clientes)</h3>
+      <p style="font-size: 13px; color: #666; margin-bottom: 1rem;">Essas métricas mostram <strong>se os clientes estão felizes e voltam para comprar de novo</strong>.</p>
+      
+      <div class="metric-row">
+        <h4>Return Rate (Taxa de Devoluções)</h4>
+        <div class="target">Menos de 5%</div>
+        <div class="description">Se 100 pessoas compram, você quer que no máximo 5 devolvam o produto por não gostar. Mais que isso = problema de qualidade ou tamanho.</div>
+      </div>
+    </div>
+
+    <!-- SWOT EXPLICADO -->
+    <div class="section">
+      <h2>🎯 SWOT Analysis - Análise Estratégica</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">SWOT <span class="term-explanation">(Strengths, Weaknesses, Opportunities, Threats)</span> é uma análise que responde: O que FOLLOW faz bem? O que faz mal? Quais as chances? Quais os riscos?</p>
+      
+      <div class="swot-grid">
+        <div class="swot-box swot-strengths">
+          <h4>💪 FORÇAS (o que a gente faz bem)</h4>
           <ul>
-            <li>Design inconfundível (logo 9.1, packaging 10/10)</li>
-            <li>Modelo pre-order reduz risco</li>
-            <li>Autenticidade brasileira = diferenciador genuíno</li>
-            <li>Público alvo específico = marketing eficiente</li>
-            <li>Margem premium possível</li>
+            <li><strong>Design inconfundível</strong> — Logo 9.1/10, packaging 10/10. Ninguém consegue copiar isso rápido.</li>
+            <li><strong>Modelo pre-order</strong> — Você só produz o que vai vender. Zero desperdício.</li>
+            <li><strong>Autenticidade brasileira</strong> — Não estamos fingindo ser europeus. É genuíno.</li>
+            <li><strong>Público específico</strong> — Sabemos exatamente quem queremos atingir (runners 18-35).</li>
+            <li><strong>Margem premium possível</strong> — Runners dispostos a pagar mais por qualidade.</li>
           </ul>
         </div>
-        <div style="background: #ffebee; padding: 1.5rem; border-radius: 8px;">
-          <h4 style="color: #c62828; margin-bottom: 8px; font-size: 14px;">⚠️ WEAKNESSES</h4>
-          <ul style="padding-left: 20px;">
-            <li>Brand awareness zero (startup)</li>
-            <li>Recursos limitados vs competidores</li>
-            <li>Logistics & fulfillment (pequena escala)</li>
-            <li>Dependência de manufatura brasileira</li>
-            <li>Sem market history/reviews</li>
+        
+        <div class="swot-box swot-weaknesses">
+          <h4>⚠️ FRAQUEZAS (o que precisa melhorar)</h4>
+          <ul>
+            <li><strong>Brand awareness zero</strong> — Ninguém conhece FOLLOW ainda. Precisamos de marketing.</li>
+            <li><strong>Recursos limitados</strong> — Startups não têm tanto dinheiro quanto Nike ou Adidas.</li>
+            <li><strong>Logística cara</strong> — Enviar 100 camisetas pelo Brasil é caro pro tamanho pequeno.</li>
+            <li><strong>Sem histórico</strong> — Primeira marca, nenhuma review, nenhuma reputação estabelecida.</li>
+            <li><strong>Dependência de manufatura</strong> — Se o produtor atrasar, seu lançamento atrasa.</li>
           </ul>
         </div>
-      </div>
-      <div class="grid-2" style="margin-top: 1rem;">
-        <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px;">
-          <h4 style="color: #2e7d32; margin-bottom: 8px; font-size: 14px;">🚀 OPPORTUNITIES</h4>
-          <ul style="padding-left: 20px;">
-            <li>Corrida em alta (pós-pandemia)</li>
-            <li>Gap de marca autêntica premium</li>
-            <li>Influencers/runners = natural advocates</li>
-            <li>Expansão para categorias afins</li>
-            <li>IP: design pode ser licensiado</li>
+        
+        <div class="swot-box swot-opportunities">
+          <h4>🚀 OPORTUNIDADES (chances que temos)</h4>
+          <ul>
+            <li><strong>Corrida em alta</strong> — Pós-pandemia, todo mundo quer treinar e ficar saudável.</li>
+            <li><strong>Gap no mercado</strong> — Falta marca brasileira de qualidade premium. Esse é o nosso lugar.</li>
+            <li><strong>Influencers naturais</strong> — Runners famosos no Instagram podem virar nossos embaixadores.</li>
+            <li><strong>Crescimento de 15-20%/ano</strong> — O mercado está crescendo, então será mais fácil vender.</li>
+            <li><strong>Expansão futura</strong> — Depois de camisetas, podemos fazer mochilas, tênis, bonés, etc.</li>
           </ul>
         </div>
-        <div style="background: #fff3e0; padding: 1.5rem; border-radius: 8px;">
-          <h4 style="color: #e65100; margin-bottom: 8px; font-size: 14px;">🔴 THREATS</h4>
-          <ul style="padding-left: 20px;">
-            <li>Marcas internacionais aumentando foco LatAm</li>
-            <li>Fast-fashion copiando designs (rápido & barato)</li>
-            <li>Volatilidade econômica brasileira</li>
-            <li>Compra online B2C ainda em desenvolvimento</li>
-            <li>Logística e shipping ainda desafiadoras</li>
+        
+        <div class="swot-box swot-threats">
+          <h4>🔴 AMEAÇAS (riscos que enfrentamos)</h4>
+          <ul>
+            <li><strong>Marcas grandes entram no nicho</strong> — Nike ou Adidas podem copiar nossa ideia.</li>
+            <li><strong>Fast-fashion copia design</strong> — Shein faz uma cópia ruim por $10 enquanto você vende por $80.</li>
+            <li><strong>Economia fraca</strong> — Se Brasil entrar em recessão, ninguém compra roupa premium.</li>
+            <li><strong>Shipping caro</strong> — Frete no Brasil é caro. Pode afastar clientes do interior.</li>
+            <li><strong>Manufatura frágil</strong> — Se produtor quebra, você fica sem produtos.</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <!-- PRÓXIMOS PASSOS -->
+    <!-- PRÓXIMAS AÇÕES MELHORADO -->
     <div class="section">
       <h2>📋 Próximas Ações Imediatas</h2>
-      <div class="next-steps">
-        <h4>⚡ Próxima Semana (CRÍTICO)</h4>
-        <ol>
-          <li><strong>Revisar este documento</strong> com stakeholders chave</li>
-          <li><strong>Finalizar specs de logo</strong> (origem brasileira, slash, variante FLLW/)</li>
-          <li><strong>Aprovar specs finais</strong> de 6 SKUs para Drop 1</li>
-          <li><strong>Agendar primeira rodada</strong> de teste com beta testers</li>
-          <li><strong>Definir plataforma pre-order</strong> (pesquisa de opções)</li>
-        </ol>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">Essas são as <strong>tarefas que você deve fazer nos próximos dias</strong>. Não é tudo de uma vez — é passo a passo.</p>
+      
+      <div class="action-item">
+        <span class="action-priority">CRÍTICO</span>
+        <div class="action-title">1. Revisar este documento com stakeholders</div>
+        <div class="action-description">
+          <span class="term">Stakeholders</span> <span class="term-explanation">(pessoas importantes que têm interesse no projeto — designer, sócio, investidor, etc)</span> precisam estar alinhados com a estratégia. Você vai apresentar tudo isso pra eles. Se alguém discordar, vocês discutem agora, não depois.
+        </div>
       </div>
-      <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-        <h4 style="color: #1565c0; margin-bottom: 8px; font-size: 14px;">🔄 Processo de Feedback & Iteração</h4>
-        <p style="font-size: 14px; color: #333; line-height: 1.6;">
-          <strong>Semanal:</strong> Sync interno (design, product, ops) — 30 min<br>
-          <strong>Bi-semanal:</strong> Feedback de beta testers — review qualitativo<br>
-          <strong>Mensalmente:</strong> Análise de notas, ajustes de estratégia<br><br>
-          <em>Critério de Decisão: Usar scoring (1-10) + qualitative feedback. Decisões baseadas em dados, não intuição.</em>
-        </p>
+      
+      <div class="action-item">
+        <span class="action-priority">CRÍTICO</span>
+        <div class="action-title">2. Finalizar specs de logo</div>
+        <div class="action-description">
+          O designer precisa fazer os últimos ajustes (origem brasileira, slash em tank top, variante FLLW/). Depois que isso estiver pronto, você manda pra manufaturera <span class="term-explanation">(a fábrica que vai produzir as camisetas)</span> com a logo exata que quer.
+        </div>
+      </div>
+      
+      <div class="action-item">
+        <span class="action-priority">CRÍTICO</span>
+        <div class="action-title">3. Aprovar specs finais dos 6 SKUs</div>
+        <div class="action-description">
+          Cada SKU precisa ter uma especificação <span class="term-explanation">(descrição detalhada: tamanho, material, peso, etc)</span> definida. Você vai com a manufatura e diz: "Quero camiseta com essas medidas exatas, esse tecido, essa cor". Sem isso, eles fazem errado.
+        </div>
+      </div>
+      
+      <div class="action-item">
+        <span class="action-priority">IMPORTANTE</span>
+        <div class="action-title">4. Agendar closed testing com beta testers</div>
+        <div class="action-description">
+          Você precisa de 20-30 pessoas para testar as camisetas <strong>antes</strong> do lançamento real. Essas pessoas precisam ser representativas do seu público (runners que usam redes sociais). Eles vão usar, testar, e dar feedback honesto. Use esse feedback pra corrigir antes de vender pra todo mundo.
+        </div>
+      </div>
+      
+      <div class="action-item">
+        <span class="action-priority">IMPORTANTE</span>
+        <div class="action-title">5. Definir preços e modelo de pre-order</div>
+        <div class="action-description">
+          Quanto vai cobrar por camiseta? Considere: custo de produção + margem de lucro + impostos. Depois escolha a plataforma <span class="term-explanation">(Shopify, CustomInk, etc)</span> e configure o sistema de pre-order <span class="term-explanation">(aonde cliente compra antes de você produzir)</span>.
+        </div>
+      </div>
+      
+      <div class="action-item">
+        <span class="action-priority">IMPORTANTE</span>
+        <div class="action-title">6. Criar todos os assets visuais</div>
+        <div class="action-description">
+          Você vai precisar de: fotos dos 6 SKUs (frente, costas, detalhe), fotos de pessoas reais usando (lifestyle shots), descrição de cada produto, guias de tamanho, etc. Isso leva tempo. Comece agora.
+        </div>
       </div>
     </div>
 
-    <!-- STATUS GERAL -->
-    <div class="section" style="background: #f0f0f0; border: none;">
+    <!-- STATUS GERAL DO PROJETO -->
+    <div class="section" style="background: #f9f9f9; border-left: 4px solid #000;">
       <h2>✅ Status Geral do Projeto</h2>
-      <div class="metric-highlight">
-        <div class="metric-item">
-          <div class="value" style="color: #2e7d32;">100%</div>
-          <div class="label">Identidade Visual</div>
+      <p style="margin-bottom: 1.5rem; font-size: 13px; color: #666;">Isso mostra em que % cada parte do projeto está completa. Você usa isso para <strong>saber se está no prazo ou atrasado</strong>.</p>
+      
+      <div class="progress-section">
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🎨 Identidade Visual (Logo, Packaging, Cores)</span>
+            <strong>100%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, #000 0%, #DC143C 100%);">100%</div>
+          </div>
         </div>
-        <div class="metric-item">
-          <div class="value" style="color: #f57c00;">75%</div>
-          <div class="label">Estratégia Produto</div>
+        
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>📦 Estratégia de Produto (SKUs, preços, modelo)</span>
+            <strong>75%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 75%; background: linear-gradient(90deg, #000 0%, #DC143C 100%);">75%</div>
+          </div>
         </div>
-        <div class="metric-item">
-          <div class="value" style="color: #f57c00;">60%</div>
-          <div class="label">Operacional</div>
+        
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🔧 Operacional (Plataforma, logistics, marketing)</span>
+            <strong>50%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%; background: linear-gradient(90deg, #000 0%, #DC143C 100%);">50%</div>
+          </div>
         </div>
-        <div class="metric-item">
-          <div class="value" style="color: #d32f2f;">30%</div>
-          <div class="label">Manufatura</div>
+        
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🏭 Manufatura (Produção das camisetas)</span>
+            <strong>25%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 25%; background: linear-gradient(90deg, #000 0%, #DC143C 100%);">25%</div>
+          </div>
+        </div>
+        
+        <div class="progress-item">
+          <div class="progress-label">
+            <span>🚀 Beta Testing & Feedback</span>
+            <strong>0%</strong>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 0%; background: linear-gradient(90deg, #000 0%, #DC143C 100%);">0%</div>
+          </div>
         </div>
       </div>
-      <p style="margin-top: 1.5rem; font-size: 14px; color: #666; text-align: center;">
-        <strong>Próxima Revisão:</strong> +30 dias (pós-Drop 1)<br>
-        <strong>Versão:</strong> 1.0 — 08/05/2026<br>
-        <strong>Documento:</strong> Vivo e dinâmico — será atualizado conforme aprendizados
-      </p>
+      
+      <div class="explanation" style="margin-top: 1.5rem;">
+        <strong>📊 Progresso Geral: 50%</strong><br><br>
+        Você está na <strong>metade do caminho</strong>. A parte criativa (design, estratégia) está praticamente pronta. Agora precisa focar em: operacional (como vender), manufatura (como produzir) e testes (ter certeza que está tudo certo antes de lançar).
+      </div>
     </div>
 
   </div>
+
+  <script>
+    const checklistItems = document.querySelectorAll('.checklist li');
+    checklistItems.forEach(item => {
+      item.addEventListener('click', function() {
+        this.classList.toggle('checked');
+      });
+    });
+  </script>
 </body>
 </html>
