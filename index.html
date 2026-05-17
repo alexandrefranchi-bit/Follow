@@ -3,590 +3,509 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Business Plan Dashboard</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>FOLLOW - Resumo Estratégico</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f8f8; color: #1a1a1a; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+    .hero { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); color: white; padding: 3rem 2rem; border-radius: 12px; margin-bottom: 2rem; }
+    .hero h1 { font-size: 36px; margin-bottom: 8px; font-weight: 700; }
+    .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 16px; }
+    .hero-meta { display: flex; gap: 24px; flex-wrap: wrap; font-size: 14px; }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label { opacity: 0.7; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-size: 18px; font-weight: 600; }
     
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
-      background: #f8f8f8; 
-      color: #1a1a1a;
-    }
+    .section { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; }
+    .section h2 { font-size: 22px; margin-bottom: 1.5rem; padding-bottom: 12px; border-bottom: 2px solid #000; }
     
-    .app { 
-      max-width: 1000px; 
-      margin: 0 auto; 
-      padding: 2rem 1rem;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
     
-    .header { 
-      margin-bottom: 2rem; 
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid #ddd;
-    }
+    .card { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1.5rem; }
+    .card h3 { font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .card-content { font-size: 16px; line-height: 1.6; color: #333; }
+    .card-value { font-size: 24px; font-weight: 700; color: #000; margin-bottom: 8px; }
     
-    .header h1 { 
-      font-size: 28px; 
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
+    .pillar { background: white; border-left: 4px solid #000; padding: 1.5rem; margin-bottom: 1rem; border-radius: 4px; }
+    .pillar-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .pillar-desc { font-size: 14px; color: #666; }
+    .pillar-metric { font-size: 12px; color: #999; margin-top: 8px; }
     
-    .header p { 
-      font-size: 14px; 
-      color: #666;
-    }
+    .timeline { position: relative; padding: 2rem 0; }
+    .phase { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+    .phase-number { width: 40px; height: 40px; background: #000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .phase-title { font-size: 18px; font-weight: 600; }
+    .phase-content { font-size: 14px; color: #666; line-height: 1.6; }
+    .task { background: #f9f9f9; padding: 10px 12px; border-radius: 4px; margin: 8px 0 8px 0; font-size: 13px; border-left: 2px solid #000; }
     
-    .tabs { 
-      display: flex; 
-      gap: 24px; 
-      border-bottom: 1px solid #ddd; 
-      margin-bottom: 2rem; 
-      padding-bottom: 0;
-      flex-wrap: wrap;
-    }
+    .kpi-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .kpi-table th { background: #f0f0f0; padding: 12px; text-align: left; font-size: 12px; font-weight: 600; border-bottom: 2px solid #ddd; }
+    .kpi-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+    .kpi-table tr:hover { background: #f9f9f9; }
     
-    .tab { 
-      padding: 12px 0; 
-      border: none; 
-      background: none; 
-      cursor: pointer; 
-      font-size: 14px; 
-      color: #999;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-      font-weight: 400;
-    }
+    .status-badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .status-active { background: #e8f5e9; color: #2e7d32; }
+    .status-planning { background: #fff3e0; color: #e65100; }
+    .status-pending { background: #f3e5f5; color: #6a1b9a; }
     
-    .tab:hover { color: #666; }
+    .strengths { background: #e8f5e9; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
+    .strengths h4 { color: #2e7d32; margin-bottom: 8px; font-size: 14px; }
+    .strengths ul { padding-left: 20px; }
+    .strengths li { margin: 6px 0; font-size: 14px; color: #333; }
     
-    .tab.active { 
-      color: #000; 
-      border-bottom-color: #000;
-      font-weight: 500;
-    }
+    .next-steps { background: #fff3e0; padding: 1.5rem; border-radius: 8px; }
+    .next-steps h4 { color: #e65100; margin-bottom: 8px; font-size: 14px; }
+    .next-steps ol { padding-left: 20px; }
+    .next-steps li { margin: 8px 0; font-size: 14px; color: #333; }
     
-    .section { 
-      background: white; 
-      border: 1px solid #ddd; 
-      border-radius: 8px; 
-      padding: 1.5rem; 
-      margin-bottom: 1rem;
-    }
+    .metric-highlight { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .metric-item { background: #f0f0f0; padding: 1rem; border-radius: 6px; text-align: center; }
+    .metric-item .value { font-size: 28px; font-weight: 700; color: #000; }
+    .metric-item .label { font-size: 12px; color: #999; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    .section h3 { 
-      font-size: 16px; 
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-    
-    .form-group { 
-      margin-bottom: 1rem; 
-    }
-    
-    .form-label { 
-      display: block; 
-      font-size: 13px; 
-      color: #666; 
-      margin-bottom: 6px; 
-      font-weight: 500;
-    }
-    
-    input, textarea { 
-      width: 100%; 
-      padding: 8px 12px; 
-      border: 1px solid #ddd; 
-      border-radius: 6px; 
-      font-size: 14px; 
-      font-family: inherit;
-      background: white;
-    }
-    
-    input:focus, textarea:focus { 
-      outline: none; 
-      border-color: #000;
-      background: #fafafa;
-    }
-    
-    textarea { 
-      min-height: 80px; 
-      resize: vertical;
-    }
-    
-    .metrics { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-      gap: 12px; 
-      margin-bottom: 2rem;
-    }
-    
-    .metric { 
-      background: #f9f9f9; 
-      border: 1px solid #eee;
-      border-radius: 6px; 
-      padding: 1rem; 
-      text-align: center;
-    }
-    
-    .metric-label { 
-      font-size: 12px; 
-      color: #999; 
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .metric-value { 
-      font-size: 32px; 
-      font-weight: 700;
-    }
-    
-    .progress-bar {
-      background: #e0e0e0;
-      height: 4px;
-      border-radius: 2px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-    
-    .progress-fill {
-      background: #000;
-      height: 100%;
-      transition: width 0.3s ease;
-    }
-    
-    .btn { 
-      background: #000; 
-      color: white; 
-      border: none; 
-      padding: 10px 20px; 
-      border-radius: 6px; 
-      font-size: 14px; 
-      font-weight: 500; 
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .btn:hover:not(:disabled) { 
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .btn:disabled { 
-      opacity: 0.5; 
-      cursor: not-allowed;
-    }
-    
-    .status { 
-      background: #f0f0f0; 
-      border-radius: 6px; 
-      padding: 12px;
-      font-size: 13px; 
-      margin-bottom: 1.5rem;
-      border-left: 3px solid #000;
-    }
-    
-    .kpi-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    .kpi-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 12px;
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-      align-items: center;
-    }
-    
-    .kpi-row:last-child { border-bottom: none; }
-    
-    .kpi-row input { margin: 0; }
-    
-    .header-label {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 12px;
-      padding: 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #666;
-      background: #f9f9f9;
-      border-radius: 6px 6px 0 0;
-    }
-    
-    .status-item {
-      padding: 12px;
-      background: #f9f9f9;
-      border-radius: 6px;
-      margin-bottom: 8px;
-      font-size: 13px;
-    }
-    
-    .status-item strong { display: block; margin-bottom: 4px; }
-    
-    .status-item .desc { color: #999; font-size: 12px; }
-    
-    @media (max-width: 600px) {
-      .header h1 { font-size: 22px; }
-      .metrics { grid-template-columns: 1fr; }
-      .tabs { gap: 12px; }
-      .tab { font-size: 12px; padding: 8px 0; }
-      .kpi-row { grid-template-columns: 1fr; }
-      .header-label { grid-template-columns: 1fr; }
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .hero { padding: 2rem 1.5rem; }
+      .hero h1 { font-size: 28px; }
+      .hero-meta { flex-direction: column; gap: 12px; }
     }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script type="text/babel">
-    function Dashboard() {
-      const [tab, setTab] = React.useState('overview');
-      const [loading, setLoading] = React.useState(true);
-      
-      const [plan, setPlan] = React.useState({
-        summary: { name: '', purpose: '', positioning: '', differentiators: '' },
-        market: { audience: '', size: '', behavior: '', competition: '' },
-        product: { description: '', model: '', drops: '4' },
-        timeline: { phase1: '', phase2: '', phase3: '' },
-        kpis: [
-          { metric: 'Pre-Order Conversion', target: '8-12%', actual: '', frequency: 'Weekly' },
-          { metric: 'Customer Satisfaction', target: '4.7+/5.0', actual: '', frequency: 'Monthly' },
-          { metric: 'Social Engagement', target: '3-5%', actual: '', frequency: 'Weekly' }
-        ],
-        lastUpdated: new Date().toISOString()
-      });
-
-      React.useEffect(() => {
-        loadFromLocalStorage();
-      }, []);
-
-      React.useEffect(() => {
-        if (!loading) {
-          saveToLocalStorage();
-        }
-      }, [plan]);
-
-      const loadFromLocalStorage = () => {
-        try {
-          const saved = localStorage.getItem('businessPlan');
-          if (saved) {
-            setPlan(JSON.parse(saved));
-          }
-        } catch (e) {
-          console.log('Primeiro uso');
-        }
-        setLoading(false);
-      };
-
-      const saveToLocalStorage = () => {
-        try {
-          localStorage.setItem('businessPlan', JSON.stringify({
-            ...plan,
-            lastUpdated: new Date().toISOString()
-          }));
-        } catch (e) {
-          console.log('Erro ao salvar');
-        }
-      };
-
-      const updateField = (section, field, value) => {
-        setPlan(prev => ({
-          ...prev,
-          [section]: { ...prev[section], [field]: value }
-        }));
-      };
-
-      const updateKPI = (index, field, value) => {
-        const newKPIs = [...plan.kpis];
-        newKPIs[index][field] = value;
-        setPlan(prev => ({ ...prev, kpis: newKPIs }));
-      };
-
-      const exportJSON = () => {
-        const data = JSON.stringify(plan, null, 2);
-        const element = document.createElement('a');
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
-        element.setAttribute('download', `business-plan-${Date.now()}.json`);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      };
-
-      const getProgress = () => {
-        let filled = 0;
-        if (plan.summary.name) filled++;
-        if (plan.market.audience) filled++;
-        if (plan.product.description) filled++;
-        if (plan.timeline.phase1) filled++;
-        return Math.round((filled / 4) * 100);
-      };
-
-      const getKPIProgress = () => {
-        const withActual = plan.kpis.filter(k => k.actual).length;
-        return Math.round((withActual / plan.kpis.length) * 100);
-      };
-
-      if (loading) {
-        return <div style={{ padding: '2rem', textAlign: 'center' }}>⏳ Carregando...</div>;
-      }
-
-      const lastUpdate = new Date(plan.lastUpdated).toLocaleString('pt-BR');
-
-      return (
-        <div className="app">
-          <div className="header">
-            <h1>{plan.summary.name || '📋 Business Plan'}</h1>
-            <p>Dashboard de acompanhamento • Atualizado em {lastUpdate}</p>
-          </div>
-
-          <div className="tabs">
-            <button className={`tab ${tab === 'overview' ? 'active' : ''}`} onClick={() => setTab('overview')}>
-              📊 Overview
-            </button>
-            <button className={`tab ${tab === 'plan' ? 'active' : ''}`} onClick={() => setTab('plan')}>
-              📝 Plano
-            </button>
-            <button className={`tab ${tab === 'timeline' ? 'active' : ''}`} onClick={() => setTab('timeline')}>
-              📅 Timeline
-            </button>
-            <button className={`tab ${tab === 'kpis' ? 'active' : ''}`} onClick={() => setTab('kpis')}>
-              📈 KPIs
-            </button>
-          </div>
-
-          {tab === 'overview' && (
-            <>
-              <div className="status">
-                💾 Auto-save ativado | Os dados são salvos automaticamente no seu navegador
-              </div>
-
-              <div className="metrics">
-                <div className="metric">
-                  <div className="metric-label">Preenchimento</div>
-                  <div className="metric-value">{getProgress()}%</div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${getProgress()}%` }}></div>
-                  </div>
-                </div>
-                <div className="metric">
-                  <div className="metric-label">KPIs</div>
-                  <div className="metric-value">{plan.kpis.length}</div>
-                </div>
-                <div className="metric">
-                  <div className="metric-label">KPIs com Metas</div>
-                  <div className="metric-value">{getKPIProgress()}%</div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${getKPIProgress()}%` }}></div>
-                  </div>
-                </div>
-              </div>
-
-              <button className="btn" onClick={exportJSON} style={{ marginBottom: '2rem' }}>
-                📥 Exportar como JSON
-              </button>
-
-              <div className="section">
-                <h3>Status das Seções</h3>
-                <div className="status-item">
-                  <strong>{plan.summary.name ? '✅' : '⏳'} Resumo Executivo</strong>
-                  {plan.summary.name && <div className="desc">{plan.summary.name}</div>}
-                </div>
-                <div className="status-item">
-                  <strong>{plan.market.audience ? '✅' : '⏳'} Mercado</strong>
-                  {plan.market.audience && <div className="desc">Público-alvo definido</div>}
-                </div>
-                <div className="status-item">
-                  <strong>{plan.product.description ? '✅' : '⏳'} Produto</strong>
-                  {plan.product.description && <div className="desc">Descrição preenchida</div>}
-                </div>
-                <div className="status-item">
-                  <strong>{plan.timeline.phase1 ? '✅' : '⏳'} Timeline</strong>
-                  {plan.timeline.phase1 && <div className="desc">Fases planejadas</div>}
-                </div>
-              </div>
-            </>
-          )}
-
-          {tab === 'plan' && (
-            <>
-              <div className="section">
-                <h3>Resumo Executivo</h3>
-                <div className="form-group">
-                  <label className="form-label">Nome da Empresa/Ideia</label>
-                  <input 
-                    type="text"
-                    placeholder="Ex: FOLLOW Streetwear"
-                    value={plan.summary.name}
-                    onChange={(e) => updateField('summary', 'name', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Purpose (Por quê?)</label>
-                  <textarea 
-                    placeholder="Por que existe? Qual é a razão de ser?"
-                    value={plan.summary.purpose}
-                    onChange={(e) => updateField('summary', 'purpose', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Posicionamento (Para quem? O quê?)</label>
-                  <textarea 
-                    placeholder="Quem é o cliente? O que você oferece?"
-                    value={plan.summary.positioning}
-                    onChange={(e) => updateField('summary', 'positioning', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Diferenciadores Competitivos</label>
-                  <textarea 
-                    placeholder="O que torna você único/incopiável?"
-                    value={plan.summary.differentiators}
-                    onChange={(e) => updateField('summary', 'differentiators', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="section">
-                <h3>Análise de Mercado</h3>
-                <div className="form-group">
-                  <label className="form-label">Quem é seu público-alvo?</label>
-                  <textarea 
-                    placeholder="Persona, idade, renda, comportamento, localização..."
-                    value={plan.market.audience}
-                    onChange={(e) => updateField('market', 'audience', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Tamanho de mercado estimado</label>
-                  <textarea 
-                    placeholder="Quantas pessoas? Crescimento por ano?"
-                    value={plan.market.size}
-                    onChange={(e) => updateField('market', 'size', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Comportamento de compra</label>
-                  <textarea 
-                    placeholder="Como compram? Que gatilhos disparam decisão?"
-                    value={plan.market.behavior}
-                    onChange={(e) => updateField('market', 'behavior', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Concorrência & Gap</label>
-                  <textarea 
-                    placeholder="Competitors? Qual o gap que você ocupa?"
-                    value={plan.market.competition}
-                    onChange={(e) => updateField('market', 'competition', e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="section">
-                <h3>Estratégia de Produto</h3>
-                <div className="form-group">
-                  <label className="form-label">Descrição do Produto</label>
-                  <textarea 
-                    placeholder="O que é? Specs? Materiais? Diferenciais?"
-                    value={plan.product.description}
-                    onChange={(e) => updateField('product', 'description', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Modelo de Negócio</label>
-                  <textarea 
-                    placeholder="Como vende? Pre-order? Direct? Subscriptions?"
-                    value={plan.product.model}
-                    onChange={(e) => updateField('product', 'model', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Quantas coleções/drops por ano?</label>
-                  <input 
-                    type="number"
-                    value={plan.product.drops}
-                    onChange={(e) => updateField('product', 'drops', e.target.value)}
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {tab === 'timeline' && (
-            <div className="section">
-              <h3>Roadmap 90 Dias</h3>
-              <div className="form-group">
-                <label className="form-label">Fase 1 (Dias 1-30) — Solidificação</label>
-                <textarea 
-                  placeholder="Que tarefas críticas precisa completar? Specs, testes, setup..."
-                  value={plan.timeline.phase1}
-                  onChange={(e) => updateField('timeline', 'phase1', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Fase 2 (Dias 31-60) — Preparação</label>
-                <textarea 
-                  placeholder="Produção, content, marketing setup..."
-                  value={plan.timeline.phase2}
-                  onChange={(e) => updateField('timeline', 'phase2', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Fase 3 (Dias 61-90) — Lançamento & Validação</label>
-                <textarea 
-                  placeholder="Go-live, campaigns, monitoramento, coleta de feedback..."
-                  value={plan.timeline.phase3}
-                  onChange={(e) => updateField('timeline', 'phase3', e.target.value)}
-                />
-              </div>
-            </div>
-          )}
-
-          {tab === 'kpis' && (
-            <div className="section">
-              <h3>KPIs & Métricas de Sucesso</h3>
-              <div style={{ marginTop: '1rem' }}>
-                <div className="header-label">
-                  <div>Métrica</div>
-                  <div>Target</div>
-                  <div>Atual</div>
-                </div>
-                {plan.kpis.map((kpi, i) => (
-                  <div key={i} className="kpi-row">
-                    <input 
-                      type="text"
-                      placeholder="Nome da métrica"
-                      value={kpi.metric}
-                      onChange={(e) => updateKPI(i, 'metric', e.target.value)}
-                    />
-                    <input 
-                      type="text"
-                      placeholder="Ex: 8-12%"
-                      value={kpi.target}
-                      onChange={(e) => updateKPI(i, 'target', e.target.value)}
-                    />
-                    <input 
-                      type="text"
-                      placeholder="Valor atual"
-                      value={kpi.actual}
-                      onChange={(e) => updateKPI(i, 'actual', e.target.value)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+  <div class="container">
+    
+    <!-- HERO SECTION -->
+    <div class="hero">
+      <h1>🎯 FOLLOW</h1>
+      <p>Marca brasileira de lifestyle streetwear e running apparel para runners urbanos</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Status</span>
+          <span class="meta-value">Em Desenvolvimento</span>
         </div>
-      );
-    }
+        <div class="meta-item">
+          <span class="meta-label">Lançamento</span>
+          <span class="meta-value">Q2 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Drops/Ano</span>
+          <span class="meta-value">4 Coleções</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Modelo</span>
+          <span class="meta-value">Pre-order / Sell-first</span>
+        </div>
+      </div>
+    </div>
 
-    ReactDOM.render(<Dashboard />, document.getElementById('root'));
-  </script>
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="section">
+      <h2>📋 Resumo Executivo</h2>
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Purpose (Por Quê?)</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">Celebrar e amplificar a cultura de corrida urbana brasileira através de design contemporâneo, qualidade premium e autenticidade genuína.</p>
+        </div>
+        <div>
+          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Posicionamento</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">Para lifestyle runners 18-35 anos que buscam qualidade premium + design inconfundível + identidade cultural autêntica.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILARES ESTRATÉGICOS -->
+    <div class="section">
+      <h2>🏛️ Pilares Estratégicos</h2>
+      <div class="pillar">
+        <div class="pillar-title">🎨 Design</div>
+        <div class="pillar-desc">Identidade visual distintiva, minimalista, inconfundível</div>
+        <div class="pillar-metric">Métrica de Sucesso: Logo 9.1/10 | Packaging 10/10</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-title">✨ Qualidade</div>
+        <div class="pillar-desc">Materiais premium, execução impecável em cada detalhe</div>
+        <div class="pillar-metric">Métrica de Sucesso: Score qualidade de produto 9.0+</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-title">📦 Estratégia</div>
+        <div class="pillar-desc">Pre-order/sell-first, lançamentos controlados, hype responsável</div>
+        <div class="pillar-metric">Métrica de Sucesso: COGS controlado, sell-through 85%+</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-title">👥 Comunidade</div>
+        <div class="pillar-desc">Conexão autêntica com runners urbanos, brand advocates</div>
+        <div class="pillar-metric">Métrica de Sucesso: Engagement rate 5%+ em social</div>
+      </div>
+    </div>
+
+    <!-- MERCADO -->
+    <div class="section">
+      <h2>🎯 Análise de Mercado</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Público-Alvo</h3>
+          <div class="card-content">
+            <strong>Lifestyle Runners 18-35 anos</strong><br><br>
+            • Praticam corrida 2-5x/semana<br>
+            • Vivem em grandes centros urbanos<br>
+            • Renda média-alta<br>
+            • Digitalmente nativos<br>
+            • Usam moda como expressão de identidade
+          </div>
+        </div>
+        <div class="card">
+          <h3>Tamanho de Mercado</h3>
+          <div class="card-value">2-3M</div>
+          <div class="card-content">
+            Lifestyle runners estimados no Brasil<br><br>
+            <strong>Crescimento:</strong> 15-20% ao ano<br>
+            <strong>Trend:</strong> Pós-pandemia, alta demanda por wellness
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 1rem;">
+        <h3>Comportamento de Compra</h3>
+        <div class="card-content">
+          ✓ Dispostos a pagar premium por qualidade + design<br>
+          ✓ Buscam diferenciação, não commodities<br>
+          ✓ High engagement em social media<br>
+          ✓ Gatilhos: Design, sustentabilidade, comunidade, exclusividade
+        </div>
+      </div>
+    </div>
+
+    <!-- DIFERENCIADORES -->
+    <div class="section">
+      <h2>🔑 Diferenciadores Competitivos</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Autenticidade Brasileira</h3>
+          <div class="card-content">Origem, design, narrativa — tudo genuinamente brasileiro, sem pretensão de ser europeu/americano.</div>
+        </div>
+        <div class="card">
+          <h3>Design System Proprietário</h3>
+          <div class="card-content">Logo, tipografia e identidade visual que não pode ser copiada. Inconfundível em ponto de venda.</div>
+        </div>
+        <div class="card">
+          <h3>Modelo Pre-Order</h3>
+          <div class="card-content">Reduz risco, permite customização, gera hype. Diferencia de fast-fashion e grandes corporações.</div>
+        </div>
+        <div class="card">
+          <h3>Comunidade First</h3>
+          <div class="card-content">Strategy focada em qualidade vs volume. Early adopters tornam-se brand advocates naturais.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUTO & ESTRATÉGIA -->
+    <div class="section">
+      <h2>🛍️ Estratégia de Produto</h2>
+      <div class="grid-2">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Modelo de Negócio</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">
+            <strong>Pre-order / Sell-first</strong><br><br>
+            Ao invés de manufaturar antes de validar demanda, FOLLOW capta pedidos primeiro, depois produz. Isso reduz risco de estoque morto e cria exclusividade.
+          </p>
+        </div>
+        <div>
+          <h3 style="font-size: 14px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 12px;">Estrutura de Drops</h3>
+          <p style="font-size: 15px; line-height: 1.7; color: #333;">
+            <strong>4 Coleções Anuais</strong><br><br>
+            Cada drop com tema visual, narrativa e seleção de SKUs próprias. Permite estender ciclo de vida, testar variações e construir antecipação.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- IDENTIDADE VISUAL -->
+    <div class="section">
+      <h2>🎨 Identidade Visual</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Logo</h3>
+          <div class="card-value">9.1/10</div>
+          <div class="card-content">
+            ✓ Geometria & proporção impecável<br>
+            ✓ Impossível confundir<br>
+            ✓ Versátil em qualquer escala<br>
+            ✓ Forte recall visual<br>
+            ✓ Pronto para produção
+          </div>
+        </div>
+        <div class="card">
+          <h3>Packaging</h3>
+          <div class="card-value">10/10</div>
+          <div class="card-content">
+            ✓ Atenção ao detalhe impecável<br>
+            ✓ Coerência visual total<br>
+            ✓ Qualidade tátil premium<br>
+            ✓ Experiência desempacotamento memorável<br>
+            ✓ Funcionalidade + estética perfeita
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 1rem;">
+        <h3>Paleta de Cores</h3>
+        <div style="display: flex; gap: 16px; margin-top: 1rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <div style="width: 40px; height: 40px; background: #000; border-radius: 4px;"></div>
+            <div><strong>Preto</strong><br>#000000<br>Base, premium</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <div style="width: 40px; height: 40px; background: #fff; border: 1px solid #ddd; border-radius: 4px;"></div>
+            <div><strong>Branco</strong><br>#FFFFFF<br>Clean, luxury</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <div style="width: 40px; height: 40px; background: #DC143C; border-radius: 4px;"></div>
+            <div><strong>Vermelho</strong><br>#DC143C<br>CTA, urgência</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROP 1 - PLANEJAMENTO -->
+    <div class="section">
+      <h2>🚀 Drop 1 - Planejamento Inaugural</h2>
+      <p style="margin-bottom: 1.5rem; font-size: 14px; color: #666;">
+        Drop 1 é o lançamento inaugural de FOLLOW. Com 6 SKUs selecionados, objetivo é demonstrar capacidade de design, qualidade e execução.
+      </p>
+      <div class="card" style="margin-bottom: 1rem;">
+        <h3>SKU Roadmap</h3>
+        <div class="card-content">
+          <strong>6 Itens Prioritários:</strong><br>
+          001. [A confirmar]<br>
+          002. [A confirmar]<br>
+          003. [A confirmar]<br>
+          004. [A confirmar]<br>
+          005. [A confirmar]<br>
+          006. [A confirmar]
+        </div>
+      </div>
+      <div class="card">
+        <h3>Métricas de Sucesso</h3>
+        <table class="kpi-table">
+          <tr>
+            <th>Métrica</th>
+            <th>Target</th>
+            <th>Racionalidade</th>
+          </tr>
+          <tr>
+            <td>Taxa de Conversão Pre-Order</td>
+            <td>8-12%</td>
+            <td>Indicador de interesse para brand nova</td>
+          </tr>
+          <tr>
+            <td>Sell-Through Rate</td>
+            <td>85%+</td>
+            <td>% de itens pré-pedidos que convertem em vendas</td>
+          </tr>
+          <tr>
+            <td>Avg Order Value (AOV)</td>
+            <td>$150+</td>
+            <td>Múltiplos SKUs por pedido = maior ticket</td>
+          </tr>
+          <tr>
+            <td>Customer Satisfaction (NPS)</td>
+            <td>4.7+/5.0</td>
+            <td>Qualidade de produto, packaging, entrega</td>
+          </tr>
+          <tr>
+            <td>Social Engagement</td>
+            <td>3-5%</td>
+            <td>Likes, comments, shares em posts</td>
+          </tr>
+          <tr>
+            <td>Repeat Purchase Intent</td>
+            <td>40%+</td>
+            <td>De primeiros compradores → Drop 2</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROADMAP 90 DIAS -->
+    <div class="section">
+      <h2>📅 Roadmap Operacional 90 Dias</h2>
+      <div class="timeline">
+        <div class="phase">
+          <div class="phase-header">
+            <div class="phase-number">1</div>
+            <div class="phase-title">Solidificação (Dias 1-30)</div>
+          </div>
+          <div class="phase-content">
+            <div class="task">✓ Finalizar 3 ajustes de logo (origem brasileira, slash tank top, variante FLLW/)</div>
+            <div class="task">✓ Aprovar specs finais de todos 6 SKUs</div>
+            <div class="task">✓ Closed testing com 20-30 beta testers (qualidade, fit, feedback)</div>
+            <div class="task">✓ Definir preços e modelo de pre-order</div>
+            <div class="task">✓ Criar assets visuais para lançamento (fotos, lifestyle, guias)</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header">
+            <div class="phase-number">2</div>
+            <div class="phase-title">Preparação (Dias 31-60)</div>
+          </div>
+          <div class="phase-content">
+            <div class="task">✓ Setup de plataforma pre-order (Shopify/similar)</div>
+            <div class="task">✓ Produção de primeiros lotes (manufatura confirmada)</div>
+            <div class="task">✓ Criar conteúdo social (posts, stories, teaser videos)</div>
+            <div class="task">✓ Definir influencers/runners para seeding</div>
+            <div class="task">✓ Preparar email sequences para lista waitlist</div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-header">
+            <div class="phase-number">3</div>
+            <div class="phase-title">Lançamento & Validação (Dias 61-90)</div>
+          </div>
+          <div class="phase-content">
+            <div class="task">✓ Go-live pre-order (Drop 1)</div>
+            <div class="task">✓ Ativar social campaign + influencer seeding</div>
+            <div class="task">✓ Monitorar metrics diariamente</div>
+            <div class="task">✓ Realizar reordenações em tempo real</div>
+            <div class="task">✓ Coletar feedback para Drop 2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs GERAIS -->
+    <div class="section">
+      <h2>📊 KPIs & Métricas Gerais</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>AWARENESS & REACH</h3>
+          <div class="card-content" style="font-size: 13px;">
+            <strong>Social Followers:</strong> 2K em 30 dias<br><br>
+            <strong>Website Visits:</strong> 5K em 30 dias<br><br>
+            <strong>Impressions:</strong> 100K earned media
+          </div>
+        </div>
+        <div class="card">
+          <h3>CONVERSION & SALES</h3>
+          <div class="card-content" style="font-size: 13px;">
+            <strong>Pre-Order:</strong> 8-12% conversão<br><br>
+            <strong>AOV:</strong> $150+<br><br>
+            <strong>Revenue:</strong> $30-50K (Drop 1)
+          </div>
+        </div>
+        <div class="card">
+          <h3>PRODUCT QUALITY</h3>
+          <div class="card-content" style="font-size: 13px;">
+            <strong>NPS:</strong> 50+ (excelente)<br><br>
+            <strong>Return Rate:</strong> &lt;5%<br><br>
+            <strong>Repeat Intent:</strong> 40%+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWOT -->
+    <div class="section">
+      <h2>🎯 SWOT Analysis</h2>
+      <div class="grid-2">
+        <div class="strengths">
+          <h4>💪 STRENGTHS</h4>
+          <ul>
+            <li>Design inconfundível (logo 9.1, packaging 10/10)</li>
+            <li>Modelo pre-order reduz risco</li>
+            <li>Autenticidade brasileira = diferenciador genuíno</li>
+            <li>Público alvo específico = marketing eficiente</li>
+            <li>Margem premium possível</li>
+          </ul>
+        </div>
+        <div style="background: #ffebee; padding: 1.5rem; border-radius: 8px;">
+          <h4 style="color: #c62828; margin-bottom: 8px; font-size: 14px;">⚠️ WEAKNESSES</h4>
+          <ul style="padding-left: 20px;">
+            <li>Brand awareness zero (startup)</li>
+            <li>Recursos limitados vs competidores</li>
+            <li>Logistics & fulfillment (pequena escala)</li>
+            <li>Dependência de manufatura brasileira</li>
+            <li>Sem market history/reviews</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 1rem;">
+        <div style="background: #e8f5e9; padding: 1.5rem; border-radius: 8px;">
+          <h4 style="color: #2e7d32; margin-bottom: 8px; font-size: 14px;">🚀 OPPORTUNITIES</h4>
+          <ul style="padding-left: 20px;">
+            <li>Corrida em alta (pós-pandemia)</li>
+            <li>Gap de marca autêntica premium</li>
+            <li>Influencers/runners = natural advocates</li>
+            <li>Expansão para categorias afins</li>
+            <li>IP: design pode ser licensiado</li>
+          </ul>
+        </div>
+        <div style="background: #fff3e0; padding: 1.5rem; border-radius: 8px;">
+          <h4 style="color: #e65100; margin-bottom: 8px; font-size: 14px;">🔴 THREATS</h4>
+          <ul style="padding-left: 20px;">
+            <li>Marcas internacionais aumentando foco LatAm</li>
+            <li>Fast-fashion copiando designs (rápido & barato)</li>
+            <li>Volatilidade econômica brasileira</li>
+            <li>Compra online B2C ainda em desenvolvimento</li>
+            <li>Logística e shipping ainda desafiadoras</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÓXIMOS PASSOS -->
+    <div class="section">
+      <h2>📋 Próximas Ações Imediatas</h2>
+      <div class="next-steps">
+        <h4>⚡ Próxima Semana (CRÍTICO)</h4>
+        <ol>
+          <li><strong>Revisar este documento</strong> com stakeholders chave</li>
+          <li><strong>Finalizar specs de logo</strong> (origem brasileira, slash, variante FLLW/)</li>
+          <li><strong>Aprovar specs finais</strong> de 6 SKUs para Drop 1</li>
+          <li><strong>Agendar primeira rodada</strong> de teste com beta testers</li>
+          <li><strong>Definir plataforma pre-order</strong> (pesquisa de opções)</li>
+        </ol>
+      </div>
+      <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+        <h4 style="color: #1565c0; margin-bottom: 8px; font-size: 14px;">🔄 Processo de Feedback & Iteração</h4>
+        <p style="font-size: 14px; color: #333; line-height: 1.6;">
+          <strong>Semanal:</strong> Sync interno (design, product, ops) — 30 min<br>
+          <strong>Bi-semanal:</strong> Feedback de beta testers — review qualitativo<br>
+          <strong>Mensalmente:</strong> Análise de notas, ajustes de estratégia<br><br>
+          <em>Critério de Decisão: Usar scoring (1-10) + qualitative feedback. Decisões baseadas em dados, não intuição.</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- STATUS GERAL -->
+    <div class="section" style="background: #f0f0f0; border: none;">
+      <h2>✅ Status Geral do Projeto</h2>
+      <div class="metric-highlight">
+        <div class="metric-item">
+          <div class="value" style="color: #2e7d32;">100%</div>
+          <div class="label">Identidade Visual</div>
+        </div>
+        <div class="metric-item">
+          <div class="value" style="color: #f57c00;">75%</div>
+          <div class="label">Estratégia Produto</div>
+        </div>
+        <div class="metric-item">
+          <div class="value" style="color: #f57c00;">60%</div>
+          <div class="label">Operacional</div>
+        </div>
+        <div class="metric-item">
+          <div class="value" style="color: #d32f2f;">30%</div>
+          <div class="label">Manufatura</div>
+        </div>
+      </div>
+      <p style="margin-top: 1.5rem; font-size: 14px; color: #666; text-align: center;">
+        <strong>Próxima Revisão:</strong> +30 dias (pós-Drop 1)<br>
+        <strong>Versão:</strong> 1.0 — 08/05/2026<br>
+        <strong>Documento:</strong> Vivo e dinâmico — será atualizado conforme aprendizados
+      </p>
+    </div>
+
+  </div>
 </body>
 </html>
