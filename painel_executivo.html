@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Executivo — Demandas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+        * { font-family: 'IBM Plex Mono', monospace; }
+        body { background: #0a0a0a; color: #f0f0f0; }
+
+        .feel-alive-red { color: #e63946; }
+        .gradient-bg { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%); }
+
+        .card-dark {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+        }
+        .card-dark:hover {
+            border-color: #e63946;
+            background: #1a1a1a;
+            box-shadow: 0 0 20px rgba(230, 57, 70, 0.1);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: #0f0f0f;
+            border-right: 2px solid #e63946;
+            transition: left 0.3s ease;
+            z-index: 40;
+            overflow-y: auto;
+        }
+        .sidebar.active { left: 0; }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; z-index: 30; }
+        .overlay.active { display: block; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none; z-index: 50;
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: #141414;
+            border: 2px solid #e63946;
+            border-radius: 2px;
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+        }
+        .modal-box h3 { color: #e63946; margin-bottom: 1rem; font-size: 1.25rem; font-weight: 700; }
+        .modal-box input, .modal-box select {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 2px;
+            margin-bottom: 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .modal-box input:focus, .modal-box select:focus { outline: none; border-color: #e63946; }
+        .modal-box select option { background: #1a1a1a; }
+        .modal-buttons { display: flex; gap: 1rem; }
+        .modal-buttons button {
+            flex: 1; padding: 0.75rem; border-radius: 2px;
+            font-weight: 600; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+        }
+        .modal-btn-cancel { background: transparent; border: 1px solid #2a2a2a; color: #a0a0a0; }
+        .modal-btn-confirm { background: #e63946; border: 1px solid #e63946; color: #0a0a0a; }
+
+        .feel-alive-header { border-bottom: 2px solid #e63946; background: #0f0f0f; }
+
+        .feel-alive-button {
+            background: transparent;
+            border: 1px solid #e63946;
+            color: #e63946;
+            padding: 0.5rem 1rem;
+            border-radius: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .feel-alive-button:hover { background: #e63946; color: #0a0a0a; }
+        .feel-alive-button-active { background: #e63946; color: #0a0a0a; }
+
+        .task-card {
+            background: #1a1a1a;
+            border-left: 4px solid #e63946;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-card:hover { background: #232323; transform: translateX(4px); }
+        .task-card.priority-urgent { border-left-color: #e63946; }
+        .task-card.priority-high { border-left-color: #ff8c00; }
+        .task-card.priority-normal { border-left-color: #4facfe; }
+        .task-card.priority-low { border-left-color: #4caf50; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 1rem; height: 1rem;
+            border: 2px solid #2a2a2a;
+            border-radius: 50%;
+            border-top-color: #e63946;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .stat-card {
+            background: #141414;
+            border: 1px solid #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 2px;
+            text-align: center;
+        }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: #e63946; margin: 0.5rem 0; }
+        .stat-label { font-size: 0.875rem; color: #a0a0a0; text-transform: uppercase; }
+
+        .refresh-timer {
+            font-size: 0.75rem; color: #666;
+            position: fixed; bottom: 1rem; right: 1rem;
+            background: #141414; border: 1px solid #2a2a2a;
+            padding: 0.5rem 1rem; border-radius: 2px;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: rgba(230,57,70,0.1);
+            border: 1px solid rgba(230,57,70,0.3);
+            color: #e63946;
+            padding: 0.1rem 0.4rem;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            margin-right: 0.25rem;
+        }
+
+        .overdue-label { color: #e63946; font-size: 0.7rem; font-weight: 700; }
+        .due-soon-label { color: #ffc107; font-size: 0.7rem; font-weight: 700; }
+
+        .search-input {
+            width: 100%;
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 2px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.875rem;
+        }
+        .search-input:focus { outline: none; border-color: #e63946; }
+    </style>
+</head>
+<body class="gradient-bg text-white">
+
+    <!-- Modal ClickUp API Key -->
+    <div class="modal-overlay" id="clickupModal">
+        <div class="modal-box">
+            <h3>🔑 CLICKUP API KEY</h3>
+            <p class="text-sm text-gray-400 mb-4">Cole sua chave ClickUp pessoal. Ela fica salva apenas no seu navegador.</p>
+            <input type="password" id="clickupInput" placeholder="pk_xxxxxxxx..." />
+            <div class="modal-buttons">
+                <button class="modal-btn-cancel" onclick="cancelClickUp()">CANCELAR</button>
+                <button class="modal-btn-confirm" onclick="confirmClickUp()">CONFIRMAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay sidebar -->
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-6 border-b-2 border-red-600">
+            <h2 class="text-xl font-bold feel-alive-red">MENU</h2>
+        </div>
+        <nav class="p-4 space-y-2">
+            <button onclick="navigateTo('home')" class="w-full text-left px-4 py-2 rounded hover:bg-slate-900 text-sm">🏠 HOME</button>
+            <button onclick="navigateTo('clickup')" class="w-full text-left px-4 py-2 rounded hover:bg-slate-900 text-sm">📋 MINHAS TAREFAS</button>
+        </nav>
+        <div class="p-4 border-t border-gray-700 mt-6">
+            <p class="text-xs text-gray-500 mb-3">CREDENCIAIS:</p>
+            <button onclick="showClickUpModal()" class="w-full feel-alive-button py-2 text-xs">🔑 CONFIGURAR CLICKUP</button>
+            <div id="api-status" class="mt-3 text-xs text-center text-gray-600">—</div>
+        </div>
+    </div>
+
+    <div class="min-h-screen">
+        <!-- Navbar -->
+        <nav class="feel-alive-header sticky top-0 z-40 backdrop-blur">
+            <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <button onclick="toggleSidebar()" class="text-2xl feel-alive-red">▮▮▮</button>
+                <div>
+                    <h1 class="text-2xl font-bold feel-alive-red">PAINEL EXECUTIVO</h1>
+                    <p class="text-xs text-gray-500"># CENTRAL DE DEMANDAS</p>
+                </div>
+                <div class="text-sm">
+                    <span id="user-chip" class="inline-block border border-red-600 px-3 py-1 rounded feel-alive-red text-xs font-bold">XAND</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HOME VIEW -->
+        <div id="view-home" class="p-8 max-w-7xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold feel-alive-red mb-2">BEM-VINDO, SR. ALEXANDRE</h2>
+                <p class="text-gray-400">Resumo executivo — Suas tarefas no ClickUp</p>
+                <div class="w-24 h-1 bg-red-600 mt-4"></div>
+            </div>
+
+            <!-- STATS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="stat-card">
+                    <p class="stat-label">📋 TOTAL</p>
+                    <p class="stat-number" id="stat-total">—</p>
+                    <p class="text-xs text-gray-500">tarefas abertas</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">🔴 URGENTES</p>
+                    <p class="stat-number" id="stat-urgent">—</p>
+                    <p class="text-xs text-gray-500">alta prioridade</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">⚠️ VENCIDAS</p>
+                    <p class="stat-number" id="stat-overdue">—</p>
+                    <p class="text-xs text-gray-500">prazo expirado</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">📅 VENCEM HOJE</p>
+                    <p class="stat-number" id="stat-today">—</p>
+                    <p class="text-xs text-gray-500">prazo hoje</p>
+                </div>
+            </div>
+
+            <!-- ÚLTIMAS TAREFAS -->
+            <div class="card-dark rounded p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <h3 class="text-lg font-bold feel-alive-red">📋 TAREFAS RECENTES</h3>
+                    <div class="flex-1 h-px bg-red-600 opacity-20"></div>
+                    <button onclick="navigateTo('clickup')" class="feel-alive-button text-xs">VER TODAS →</button>
+                </div>
+                <div id="home-tasks">
+                    <div class="flex items-center justify-center py-12 text-gray-500 text-sm">
+                        Configure sua API Key do ClickUp no menu lateral para começar.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLICKUP VIEW -->
+        <div id="view-clickup" class="hidden p-8 max-w-7xl mx-auto">
+            <button onclick="navigateTo('home')" class="mb-6 feel-alive-button">← VOLTAR</button>
+
+            <div class="card-dark rounded p-8">
+                <h2 class="text-3xl font-bold feel-alive-red mb-1">📋 MINHAS TAREFAS</h2>
+                <p class="text-gray-500 text-sm mb-6">Todas as tarefas atribuídas a você no ClickUp</p>
+                <div class="w-32 h-1 bg-red-600 mb-8"></div>
+
+                <!-- Busca e filtros -->
+                <div class="mb-6 space-y-4">
+                    <input type="text" class="search-input" id="search-input" placeholder="🔍 Buscar tarefa..." oninput="applyFilters()" />
+                    <div class="flex gap-3 flex-wrap" id="filter-buttons">
+                        <button class="feel-alive-button feel-alive-button-active text-xs" id="btn-all" onclick="setFilter('all')">TODAS</button>
+                        <button class="feel-alive-button text-xs" id="btn-urgent" onclick="setFilter('urgent')">🔴 URGENTE</button>
+                        <button class="feel-alive-button text-xs" id="btn-high" onclick="setFilter('high')">🟠 ALTA</button>
+                        <button class="feel-alive-button text-xs" id="btn-overdue" onclick="setFilter('overdue')">⚠️ VENCIDAS</button>
+                        <button class="feel-alive-button text-xs" id="btn-today" onclick="setFilter('today')">📅 HOJE</button>
+                    </div>
+                </div>
+
+                <div id="clickup-tasks">
+                    <div class="flex items-center justify-center py-12">
+                        <div class="spinner"></div>
+                        <span class="ml-3 text-sm text-gray-500">CARREGANDO TAREFAS...</span>
+                    </div>
+                </div>
+
+                <div id="load-more-wrap" class="hidden text-center mt-6">
+                    <button onclick="loadMore()" class="feel-alive-button text-sm">CARREGAR MAIS</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="refresh-timer" id="refreshTimer">🔄 5:00</div>
+
+    <script>
+    // ===== STATE =====
+    let clickupApiKey = localStorage.getItem('clickupApiKey') || '';
+    let currentUserId = null;
+    let allTasks = [];
+    let activeFilter = 'all';
+    let displayedCount = 20;
+    let refreshCountdown = 300;
+
+    const WORKSPACE_ID = '9013148008';
+
+    // ===== UTILS =====
+    const now = () => Date.now();
+    const todayStart = () => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); };
+    const todayEnd   = () => { const d = new Date(); d.setHours(23,59,59,999); return d.getTime(); };
+
+    function priorityLabel(p) {
+        if (!p) return { text: '—', cls: '' };
+        const map = { 1: { text: 'URGENTE', cls: 'priority-urgent' }, 2: { text: 'ALTA', cls: 'priority-high' }, 3: { text: 'NORMAL', cls: 'priority-normal' }, 4: { text: 'BAIXA', cls: 'priority-low' } };
+        return map[p] || { text: '—', cls: '' };
+    }
+
+    function statusStyle(status) {
+        const s = (status || '').toLowerCase();
+        if (s.includes('progress') || s.includes('andamento')) return 'background:rgba(255,193,7,0.15);color:#ffc107';
+        if (s.includes('review') || s.includes('revisão'))    return 'background:rgba(79,172,254,0.15);color:#4facfe';
+        if (s.includes('done') || s.includes('concluído') || s.includes('complete')) return 'background:rgba(76,175,80,0.15);color:#4caf50';
+        return 'background:rgba(230,57,70,0.15);color:#e63946';
+    }
+
+    function dueDateHtml(due) {
+        if (!due) return '';
+        const ts = parseInt(due);
+        const label = new Date(ts).toLocaleDateString('pt-BR');
+        if (ts < todayStart()) return `<span class="overdue-label">⚠️ VENCEU ${label}</span>`;
+        if (ts <= todayEnd())   return `<span class="due-soon-label">📅 VENCE HOJE</span>`;
+        return `<span class="text-gray-500 text-xs">📅 ${label}</span>`;
+    }
+
+    function renderTask(task) {
+        const pri = priorityLabel(task.priority?.id);
+        const tags = (task.tags || []).map(t => `<span class="tag-pill">${t.name}</span>`).join('');
+        return `
+            <div class="task-card ${pri.cls}" onclick="window.open('${task.url}','_blank')">
+                <div class="flex justify-between items-start gap-2 mb-2">
+                    <h4 class="font-bold text-sm leading-snug">${task.name}</h4>
+                    <span class="status-badge flex-shrink-0" style="${statusStyle(task.status?.status)}">
+                        ${(task.status?.status || '—').toUpperCase()}
+                    </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                    <span>${task.space?.name || ''}</span>
+                    ${task.folder?.name ? `<span>/ ${task.folder.name}</span>` : ''}
+                    <span>/ ${task.list?.name || ''}</span>
+                </div>
+                ${tags ? `<div class="mt-2">${tags}</div>` : ''}
+                <div class="mt-2">${dueDateHtml(task.due_date)}</div>
+            </div>`;
+    }
+
+    // ===== FILTERS =====
+    function setFilter(f) {
+        activeFilter = f;
+        displayedCount = 20;
+        ['all','urgent','high','overdue','today'].forEach(id => {
+            const btn = document.getElementById('btn-' + id);
+            if (btn) btn.classList.toggle('feel-alive-button-active', id === f);
+        });
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+        let tasks = allTasks;
+
+        if (activeFilter === 'urgent')  tasks = tasks.filter(t => t.priority?.id == 1);
+        if (activeFilter === 'high')    tasks = tasks.filter(t => t.priority?.id <= 2);
+        if (activeFilter === 'overdue') tasks = tasks.filter(t => t.due_date && parseInt(t.due_date) < todayStart());
+        if (activeFilter === 'today')   tasks = tasks.filter(t => t.due_date && parseInt(t.due_date) >= todayStart() && parseInt(t.due_date) <= todayEnd());
+
+        if (q) tasks = tasks.filter(t => t.name.toLowerCase().includes(q) || (t.list?.name || '').toLowerCase().includes(q));
+
+        const slice = tasks.slice(0, displayedCount);
+        document.getElementById('clickup-tasks').innerHTML = slice.length
+            ? slice.map(renderTask).join('')
+            : '<p class="text-center text-gray-500 py-8">Nenhuma tarefa encontrada.</p>';
+
+        const lm = document.getElementById('load-more-wrap');
+        if (lm) lm.classList.toggle('hidden', tasks.length <= displayedCount);
+    }
+
+    function loadMore() {
+        displayedCount += 20;
+        applyFilters();
+    }
+
+    // ===== CLICKUP API (chamada direta via CORS) =====
+    async function cuFetch(path) {
+        const res = await fetch('https://api.clickup.com/api/v2' + path, {
+            headers: { Authorization: clickupApiKey }
+        });
+        if (!res.ok) throw new Error(`ClickUp API ${res.status}: ${res.statusText}`);
+        return res.json();
+    }
+
+    async function getCurrentUser() {
+        const data = await cuFetch('/user');
+        return data.user;
+    }
+
+    async function fetchAllAssignedTasks(userId) {
+        let page = 0, tasks = [], more = true;
+        while (more) {
+            const data = await cuFetch(
+                `/team/${WORKSPACE_ID}/task?assignees[]=${userId}&include_closed=false&subtasks=true&page=${page}&order_by=due_date&reverse=false`
+            );
+            const batch = data.tasks || [];
+            tasks = tasks.concat(batch);
+            // ClickUp retorna até 100 por página; se vier menos, acabou
+            if (batch.length < 100) { more = false; } else { page++; }
+            // segurança: máx 10 páginas (1000 tarefas)
+            if (page >= 10) break;
+        }
+        return tasks;
+    }
+
+    // ===== LOAD DATA =====
+    async function loadClickUpData() {
+        if (!clickupApiKey) {
+            showNoKey();
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // 1. pegar usuário atual
+            const user = await getCurrentUser();
+            currentUserId = user.id;
+            document.getElementById('user-chip').textContent = (user.username || user.email || 'XAND').toUpperCase().slice(0, 8);
+            document.getElementById('api-status').innerHTML = `<span style="color:#4caf50">● CONECTADO</span><br>${user.email || user.username}`;
+
+            // 2. buscar todas as tarefas atribuídas
+            const tasks = await fetchAllAssignedTasks(user.id);
+            allTasks = tasks;
+
+            // 3. atualizar stats
+            updateStats(tasks);
+
+            // 4. renderizar home (primeiras 5)
+            renderHomeTasks(tasks.slice(0, 5));
+
+            // 5. se estiver na view clickup, renderizar
+            applyFilters();
+
+        } catch (err) {
+            console.error(err);
+            const msg = `<p class="text-center text-red-500 py-8">❌ ${err.message}</p>`;
+            document.getElementById('home-tasks').innerHTML = msg;
+            document.getElementById('clickup-tasks').innerHTML = msg;
+            document.getElementById('api-status').innerHTML = `<span style="color:#e63946">● ERRO</span>`;
+        }
+
+        setLoading(false);
+    }
+
+    function setLoading(on) {
+        const spinner = `<div class="flex items-center justify-center py-12"><div class="spinner"></div><span class="ml-3 text-sm text-gray-500">CARREGANDO...</span></div>`;
+        if (on) {
+            document.getElementById('clickup-tasks').innerHTML = spinner;
+        }
+    }
+
+    function showNoKey() {
+        const msg = `<p class="text-center text-gray-500 py-8">Configure sua API Key do ClickUp no menu lateral.</p>`;
+        document.getElementById('home-tasks').innerHTML = msg;
+        document.getElementById('clickup-tasks').innerHTML = msg;
+        updateStats([]);
+    }
+
+    function updateStats(tasks) {
+        const ts = todayStart(), te = todayEnd();
+        document.getElementById('stat-total').textContent   = tasks.length;
+        document.getElementById('stat-urgent').textContent  = tasks.filter(t => t.priority?.id <= 2).length;
+        document.getElementById('stat-overdue').textContent = tasks.filter(t => t.due_date && parseInt(t.due_date) < ts).length;
+        document.getElementById('stat-today').textContent   = tasks.filter(t => t.due_date && parseInt(t.due_date) >= ts && parseInt(t.due_date) <= te).length;
+    }
+
+    function renderHomeTasks(tasks) {
+        document.getElementById('home-tasks').innerHTML = tasks.length
+            ? tasks.map(renderTask).join('')
+            : '<p class="text-center text-gray-500 py-8">✅ Nenhuma tarefa aberta!</p>';
+    }
+
+    // ===== MODAL =====
+    function showClickUpModal() {
+        document.getElementById('clickupModal').classList.add('active');
+        document.getElementById('clickupInput').value = clickupApiKey;
+    }
+    function confirmClickUp() {
+        const key = document.getElementById('clickupInput').value.trim();
+        if (!key) { alert('❌ Chave não pode estar vazia'); return; }
+        clickupApiKey = key;
+        localStorage.setItem('clickupApiKey', clickupApiKey);
+        document.getElementById('clickupModal').classList.remove('active');
+        loadClickUpData();
+    }
+    function cancelClickUp() {
+        document.getElementById('clickupModal').classList.remove('active');
+    }
+
+    // ===== NAV =====
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+    }
+    function navigateTo(view) {
+        document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById('view-' + view).classList.remove('hidden');
+        closeSidebar();
+        window.scrollTo(0, 0);
+    }
+
+    // ===== AUTO-REFRESH =====
+    function startRefreshTimer() {
+        setInterval(() => {
+            refreshCountdown--;
+            const min = Math.floor(refreshCountdown / 60);
+            const seg = refreshCountdown % 60;
+            document.getElementById('refreshTimer').textContent =
+                `🔄 ${min}:${seg.toString().padStart(2, '0')}`;
+            if (refreshCountdown <= 0) {
+                refreshCountdown = 300;
+                loadClickUpData();
+            }
+        }, 1000);
+    }
+
+    // ===== INIT =====
+    window.addEventListener('DOMContentLoaded', () => {
+        startRefreshTimer();
+        if (clickupApiKey) {
+            loadClickUpData();
+        } else {
+            showNoKey();
+            setTimeout(showClickUpModal, 600);
+        }
+    });
+    </script>
+</body>
+</html>
