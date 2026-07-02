@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Tracker — {{ event_name }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">✈️ Flight Tracker</div>
+    <div class="route">{{ origin }} → {{ destinations|join(' / ') }}</div>
+    <div class="event">{{ event_name }} — {{ event_date }}</div>
+</header>
+
+<main>
+    <section class="metrics" id="metrics">
+        <div class="metric">
+            <div class="mv" id="m-total">–</div>
+            <div class="ml">Registros coletados</div>
+        </div>
+        <div class="metric">
+            <div class="mv" id="m-min">–</div>
+            <div class="ml">Menor preço já visto</div>
+        </div>
+        <div class="metric">
+            <div class="mv" id="m-avg">–</div>
+            <div class="ml">Preço médio</div>
+        </div>
+        <div class="metric">
+            <div class="mv" id="m-max">–</div>
+            <div class="ml">Maior preço</div>
+        </div>
+    </section>
+
+    <section class="card" id="recommendation-card">
+        <div class="ct">Recomendação</div>
+        <div id="recommendation" class="recommendation">Carregando…</div>
+    </section>
+
+    <section class="card">
+        <div class="ct">Melhores combinações (ida + volta)</div>
+        <table id="best-table">
+            <thead>
+                <tr>
+                    <th>Rota</th><th>Ida</th><th>Volta</th><th>Companhia</th>
+                    <th>Preço</th><th>Direto</th><th>Link</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <div class="ct">Tendência de preço</div>
+        <canvas id="trend-chart" height="90"></canvas>
+    </section>
+</main>
+
+<footer>
+    Atualiza a cada {{ 30 }} min · Alertas por email quando o preço cai mais de 10%
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
